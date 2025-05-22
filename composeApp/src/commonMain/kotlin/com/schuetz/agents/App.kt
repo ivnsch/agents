@@ -1,24 +1,26 @@
 package com.schuetz.agents
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -42,28 +44,30 @@ fun App() {
                     Message("I'm fine")
                 )
             )
-            UserInput()
+            UserInput(onMessageSent = {
+                println("sent!")
+            })
         }
     }
 }
 
 @Composable
-private fun UserInput() {
+private fun UserInput(onMessageSent: () -> Unit) {
     var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue())
     }
-    Box(
+
+    Row(
         Modifier
-            .background(Color.Blue)
+            .background(Color.Blue).fillMaxWidth()
     ) {
         BasicTextField(
             value = textState,
             onValueChange = { textState = it },
             modifier = Modifier
                 .padding(start = 32.dp)
-                .align(Alignment.CenterStart)
                 .height(48.dp)
-                .fillMaxWidth(),
+                .weight(1f),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Send,
@@ -75,6 +79,17 @@ private fun UserInput() {
             cursorBrush = SolidColor(LocalContentColor.current),
             textStyle = LocalTextStyle.current.copy(color = LocalContentColor.current),
         )
+
+        Button(
+            modifier = Modifier.height(36.dp).width(100.dp),
+            onClick = onMessageSent,
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Text(
+                "Send",
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+        }
     }
 }
 
