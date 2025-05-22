@@ -112,7 +112,7 @@ fun MessageList(
     messages: List<Message>,
 ) {
     LazyColumn(modifier = modifier) {
-        items(items = messages, key = { it.text }) { item ->
+        items(items = messages) { item ->
             MessageView(
                 message = item,
             )
