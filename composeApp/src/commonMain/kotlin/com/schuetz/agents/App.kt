@@ -39,6 +39,15 @@ val exampleState = ChatUiState(
         Message("hi!"),
         Message("how are you doing?"),
         Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
+        Message("I'm doing great, thanks!"),
     ),
 )
 
