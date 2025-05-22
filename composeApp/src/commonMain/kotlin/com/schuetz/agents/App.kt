@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -31,6 +33,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 val exampleState = ChatUiState(
@@ -61,14 +64,22 @@ fun App() {
 
 @Composable
 private fun Chat(state: ChatUiState) {
+    val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+
     Column(modifier = Modifier.fillMaxSize()) {
         MessageList(
             modifier = Modifier.weight(1f),
-            state.messages
+            messages = state.messages,
+            listState = listState
         )
         UserInput(sendMessage = { message ->
             state.addMessage(message)
             println("sent!")
+
+            scope.launch {
+                listState.animateScrollToItem(state.messages.lastIndex)
+            }
         })
     }
 }
@@ -122,8 +133,12 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
 fun MessageList(
     modifier: Modifier = Modifier,
     messages: List<Message>,
+    listState: LazyListState,
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier, state = listState,
+    ) {
+
         items(items = messages) { item ->
             MessageBubble(message = item)
             Spacer(modifier = Modifier.height(4.dp))
