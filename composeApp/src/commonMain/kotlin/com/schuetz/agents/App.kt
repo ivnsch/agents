@@ -30,29 +30,39 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
+val exampleState = ChatUiState(
+    initialMessages = listOf(
+        Message("Hello!"),
+        Message("hi!"),
+        Message("how are you doing?"),
+        Message("I'm doing great, thanks!"),
+    ),
+)
+
 @Composable
 @Preview
 fun App() {
     MaterialTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            MessageList(
-                modifier = Modifier.weight(1f),
-                listOf(
-                    Message("hello"),
-                    Message("hello back"),
-                    Message("How are you"),
-                    Message("I'm fine")
-                )
-            )
-            UserInput(onMessageSent = {
-                println("sent!")
-            })
-        }
+        Chat(state = exampleState)
     }
 }
 
 @Composable
-private fun UserInput(onMessageSent: () -> Unit) {
+private fun Chat(state: ChatUiState) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        MessageList(
+            modifier = Modifier.weight(1f),
+            state.messages
+        )
+        UserInput(sendMessage = { message ->
+            state.addMessage(message)
+            println("sent!")
+        })
+    }
+}
+
+@Composable
+private fun UserInput(sendMessage: (Message) -> Unit) {
     var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue())
     }
@@ -82,7 +92,10 @@ private fun UserInput(onMessageSent: () -> Unit) {
 
         Button(
             modifier = Modifier.height(36.dp).width(100.dp),
-            onClick = onMessageSent,
+            onClick = {
+                sendMessage(Message(textState.text))
+                textState = TextFieldValue("")
+            },
             contentPadding = PaddingValues(0.dp),
         ) {
             Text(
@@ -117,3 +130,13 @@ private fun MessageView(
 }
 
 data class Message(val text: String)
+
+class ChatUiState(initialMessages: List<Message>) {
+    private val _messages: MutableList<Message> = initialMessages.toMutableStateList()
+    val messages: List<Message> = _messages
+
+    fun addMessage(msg: Message) {
+        _messages.add(msg)
+    }
+}
+
