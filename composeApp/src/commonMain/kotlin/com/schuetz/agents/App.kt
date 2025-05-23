@@ -142,7 +142,11 @@ fun MessageList(
 
         items(items = messages) { item ->
             when (item.author) {
-                Author.Agent -> MessageView(message = item)
+                Author.Agent -> MessageView(
+                    message = item,
+                    modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp)
+                )
+
                 Author.Me -> MessageBubble(message = item)
             }
             Spacer(modifier = Modifier.height(4.dp))
@@ -159,8 +163,12 @@ fun MessageBubble(message: Message) {
         Surface(
             color = MaterialTheme.colorScheme.primary,
             shape = MessageBubbleShape,
+            modifier = Modifier.padding(16.dp)
         ) {
-            MessageView(message = message)
+            MessageView(
+                message = message,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
@@ -168,11 +176,8 @@ fun MessageBubble(message: Message) {
 private val MessageBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
 
 @Composable
-private fun MessageView(message: Message) {
-    Text(
-        text = message.text,
-        modifier = Modifier.padding(16.dp),
-    )
+private fun MessageView(modifier: Modifier, message: Message) {
+    Text(text = message.text, modifier = modifier)
 }
 
 data class Message(val text: String, val author: Author)
