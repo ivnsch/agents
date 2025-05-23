@@ -1,6 +1,7 @@
 package com.schuetz.agents
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -155,7 +156,10 @@ fun MessageList(
 
 @Composable
 fun MessageBubble(message: Message) {
-    Column {
+    Row(
+        horizontalArrangement = Arrangement.End,
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Surface(
             color = MaterialTheme.colorScheme.primary,
             shape = MessageBubbleShape,
@@ -167,7 +171,7 @@ fun MessageBubble(message: Message) {
     }
 }
 
-private val MessageBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
+private val MessageBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
 
 @Composable
 private fun MessageView(message: Message) {
