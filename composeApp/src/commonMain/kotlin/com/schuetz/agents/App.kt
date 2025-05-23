@@ -57,7 +57,7 @@ val exampleState = ChatUiState(
         Message("I'm doing great, thanks!", Author.Me),
         Message("I'm doing great, thanks!", Author.Agent),
         Message("I'm doing great, thanks!", Author.Me),
-    ),
+    ).reversed(),
 )
 
 @Composable
@@ -82,10 +82,6 @@ private fun Chat(state: ChatUiState) {
         UserInput(sendMessage = { message ->
             state.addMessage(message)
             println("sent!")
-
-            scope.launch {
-                listState.animateScrollToItem(state.messages.lastIndex)
-            }
         })
     }
 }
@@ -142,7 +138,9 @@ fun MessageList(
     listState: LazyListState,
 ) {
     LazyColumn(
-        modifier = modifier, state = listState,
+        modifier = modifier,
+        state = listState,
+        reverseLayout = true
     ) {
 
         items(items = messages) { item ->
@@ -192,7 +190,7 @@ class ChatUiState(initialMessages: List<Message>) {
     val messages: List<Message> = _messages
 
     fun addMessage(msg: Message) {
-        _messages.add(msg)
+        _messages.add(0, msg)
     }
 }
 
