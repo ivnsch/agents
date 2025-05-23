@@ -45,10 +45,16 @@ val exampleState = ChatUiState(
         Message("I'm doing great, thanks!", Author.Agent),
         Message("I'm doing great, thanks!", Author.Me),
         Message("I'm doing great, thanks!", Author.Agent),
-        Message("I'm doing great, thanks!", Author.Me),
+        Message(
+            "I'm doing great, thanks! I'm doing great, thanks! I'm doing great, thanks! I'm doing great, thanks!",
+            Author.Me
+        ),
         Message("I'm doing great, thanks!", Author.Agent),
         Message("I'm doing great, thanks!", Author.Me),
-        Message("I'm doing great, thanks!", Author.Agent),
+        Message(
+            "I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!",
+            Author.Agent
+        ),
         Message("I'm doing great, thanks!", Author.Me),
         Message("I'm doing great, thanks!", Author.Agent),
         Message("I'm doing great, thanks!", Author.Me),
