@@ -1,11 +1,12 @@
 package com.schuetz.agents.chat
 
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.Flow
 
 class ChatViewModel(private val chatRepo: ChatRepo) : ViewModel() {
-    val messages: List<Message> = chatRepo.messages
+    val messages: Flow<List<Message>> = chatRepo.messages
 
-    fun addMessage(message: Message) {
+    suspend fun addMessage(message: Message) {
         chatRepo.addMessage(message)
     }
 }

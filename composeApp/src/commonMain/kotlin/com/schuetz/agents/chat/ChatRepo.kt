@@ -1,7 +1,9 @@
 package com.schuetz.agents.chat
 
-interface ChatRepo {
-    val messages: List<Message>
+import kotlinx.coroutines.flow.Flow
 
-    fun addMessage(message: Message)
+interface ChatRepo {
+    val messages: Flow<List<Message>>
+
+    suspend fun addMessage(message: Message)
 }

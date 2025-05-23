@@ -1,13 +1,14 @@
 package com.schuetz.agents.chat
 
-import androidx.compose.runtime.toMutableStateList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class ChatRepoImpl : ChatRepo {
-    private val _messages: MutableList<Message> = initialMessages.toMutableStateList()
-    override val messages: List<Message> = _messages
+    private val _messages = MutableStateFlow(initialMessages)
+    override val messages: Flow<List<Message>> = _messages
 
-    override fun addMessage(message: Message) {
-        _messages.add(0, message)
+    override suspend fun addMessage(message: Message) {
+        _messages.value = listOf(message) + _messages.value
     }
 }
 
