@@ -117,36 +117,42 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
                 textStyle = LocalTextStyle.current.copy(color = LocalContentColor.current),
             )
 
-            val sendButtonEnabled = textState.text.isNotBlank()
-            val border = if (!sendButtonEnabled) {
-                BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                )
-            } else {
-                null
-            }
-
-            Button(
-                modifier = Modifier.height(36.dp).width(100.dp),
-                onClick = {
-                    sendMessage(Message(textState.text, Author.Me))
-                    textState = TextFieldValue("")
-                },
-                enabled = sendButtonEnabled,
-                contentPadding = PaddingValues(0.dp),
-                colors = ButtonDefaults.buttonColors(
-                    disabledContainerColor = Color.Transparent,
-                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
-                ),
-                border = border
-            ) {
-                Text(
-                    "Send",
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                )
-            }
+            SendButton(textState.text.isNotBlank(), onClick = {
+                sendMessage(Message(textState.text, Author.Me))
+                textState = TextFieldValue("")
+            })
         }
+    }
+}
+
+@Composable
+private fun SendButton(isEnabled: Boolean, onClick: () -> Unit) {
+    val border = if (!isEnabled) {
+        BorderStroke(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+        )
+    } else {
+        null
+    }
+
+    Button(
+        modifier = Modifier.height(36.dp).width(100.dp),
+        onClick = {
+            onClick()
+        },
+        enabled = isEnabled,
+        contentPadding = PaddingValues(0.dp),
+        colors = ButtonDefaults.buttonColors(
+            disabledContainerColor = Color.Transparent,
+            disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+        ),
+        border = border
+    ) {
+        Text(
+            "Send",
+            modifier = Modifier.padding(horizontal = 16.dp),
+        )
     }
 }
 
