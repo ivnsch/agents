@@ -38,19 +38,19 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 
 val exampleState = ChatUiState(
     initialMessages = listOf(
-        Message("Hello!"),
-        Message("hi!"),
-        Message("how are you doing?"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
-        Message("I'm doing great, thanks!"),
+        Message("Hello!", Author.Me),
+        Message("hi!", Author.Agent),
+        Message("how are you doing?", Author.Me),
+        Message("I'm doing great, thanks!", Author.Agent),
+        Message("I'm doing great, thanks!", Author.Me),
+        Message("I'm doing great, thanks!", Author.Agent),
+        Message("I'm doing great, thanks!", Author.Me),
+        Message("I'm doing great, thanks!", Author.Agent),
+        Message("I'm doing great, thanks!", Author.Me),
+        Message("I'm doing great, thanks!", Author.Agent),
+        Message("I'm doing great, thanks!", Author.Me),
+        Message("I'm doing great, thanks!", Author.Agent),
+        Message("I'm doing great, thanks!", Author.Me),
     ),
 )
 
@@ -116,7 +116,7 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
         Button(
             modifier = Modifier.height(36.dp).width(100.dp),
             onClick = {
-                sendMessage(Message(textState.text))
+                sendMessage(Message(textState.text, Author.Me))
                 textState = TextFieldValue("")
             },
             contentPadding = PaddingValues(0.dp),
@@ -140,7 +140,14 @@ fun MessageList(
     ) {
 
         items(items = messages) { item ->
-            MessageBubble(message = item)
+            when (item.author) {
+                Author.Agent -> MessageView(
+                    message = item,
+                )
+
+                Author.Me -> MessageBubble(message = item)
+            }
+
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
@@ -170,7 +177,7 @@ private fun MessageView(message: Message) {
     )
 }
 
-data class Message(val text: String)
+data class Message(val text: String, val author: Author)
 
 class ChatUiState(initialMessages: List<Message>) {
     private val _messages: MutableList<Message> = initialMessages.toMutableStateList()
@@ -181,3 +188,7 @@ class ChatUiState(initialMessages: List<Message>) {
     }
 }
 
+sealed interface Author {
+    data object Me : Author
+    data object Agent : Author
+}
