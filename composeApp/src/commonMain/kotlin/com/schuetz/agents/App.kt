@@ -1,6 +1,5 @@
 package com.schuetz.agents
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,8 +26,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -91,41 +90,43 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
         mutableStateOf(TextFieldValue())
     }
 
-    Row(
-        Modifier
-            .background(Color.Blue).fillMaxWidth()
-    ) {
-        BasicTextField(
-            value = textState,
-            onValueChange = { textState = it },
-            modifier = Modifier
-                .padding(start = 32.dp)
-                .height(48.dp)
-                .weight(1f),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Send,
-            ),
-            keyboardActions = KeyboardActions {
-                println("in keyboard actions!")
-            },
-            maxLines = 1,
-            cursorBrush = SolidColor(LocalContentColor.current),
-            textStyle = LocalTextStyle.current.copy(color = LocalContentColor.current),
-        )
-
-        Button(
-            modifier = Modifier.height(36.dp).width(100.dp),
-            onClick = {
-                sendMessage(Message(textState.text, Author.Me))
-                textState = TextFieldValue("")
-            },
-            contentPadding = PaddingValues(0.dp),
+    Surface(tonalElevation = 1.dp) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                "Send",
-                modifier = Modifier.padding(horizontal = 16.dp),
+            BasicTextField(
+                value = textState,
+                onValueChange = { textState = it },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .height(80.dp)
+                    .weight(1f),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Send,
+                ),
+                keyboardActions = KeyboardActions {
+                    println("in keyboard actions!")
+                },
+                maxLines = 1,
+                cursorBrush = SolidColor(LocalContentColor.current),
+                textStyle = LocalTextStyle.current.copy(color = LocalContentColor.current),
             )
+
+            Button(
+                modifier = Modifier.height(36.dp).width(100.dp),
+                onClick = {
+                    sendMessage(Message(textState.text, Author.Me))
+                    textState = TextFieldValue("")
+                },
+                contentPadding = PaddingValues(0.dp)
+            ) {
+                Text(
+                    "Send",
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                )
+            }
         }
     }
 }
