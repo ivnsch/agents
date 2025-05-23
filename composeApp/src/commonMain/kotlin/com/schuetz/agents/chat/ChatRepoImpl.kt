@@ -1,5 +1,7 @@
 package com.schuetz.agents.chat
 
+import com.schuetz.agents.domain.Author
+import com.schuetz.agents.domain.Message
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 

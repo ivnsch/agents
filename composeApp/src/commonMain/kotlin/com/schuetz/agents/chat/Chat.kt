@@ -47,6 +47,8 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.runtime.CompositionLocalProvider
+import com.schuetz.agents.domain.Author
+import com.schuetz.agents.domain.Message
 
 @Composable
 fun Chat(viewModel: ChatViewModel) {
@@ -64,7 +66,7 @@ fun Chat(viewModel: ChatViewModel) {
         )
         UserInput(sendMessage = { message ->
             scope.launch {
-                viewModel.addMessage(message)
+                viewModel.sendMessage(message)
                 println("sent!")
             }
         })
