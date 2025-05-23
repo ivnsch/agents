@@ -142,13 +142,9 @@ fun MessageList(
 
         items(items = messages) { item ->
             when (item.author) {
-                Author.Agent -> MessageView(
-                    message = item,
-                )
-
+                Author.Agent -> MessageView(message = item)
                 Author.Me -> MessageBubble(message = item)
             }
-
             Spacer(modifier = Modifier.height(4.dp))
         }
     }
@@ -164,9 +160,7 @@ fun MessageBubble(message: Message) {
             color = MaterialTheme.colorScheme.primary,
             shape = MessageBubbleShape,
         ) {
-            MessageView(
-                message = message,
-            )
+            MessageView(message = message)
         }
     }
 }
