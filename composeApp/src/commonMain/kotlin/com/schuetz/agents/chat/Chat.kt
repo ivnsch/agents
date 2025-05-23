@@ -31,7 +31,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,42 +40,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 
-val exampleState = ChatUiState(
-    initialMessages = listOf(
-        Message("Hello!", Author.Me),
-        Message("hi!", Author.Agent),
-        Message("how are you doing?", Author.Me),
-        Message("I'm doing great, thanks!", Author.Agent),
-        Message("I'm doing great, thanks!", Author.Me),
-        Message("I'm doing great, thanks!", Author.Agent),
-        Message(
-            "I'm doing great, thanks! I'm doing great, thanks! I'm doing great, thanks! I'm doing great, thanks!",
-            Author.Me
-        ),
-        Message("I'm doing great, thanks!", Author.Agent),
-        Message("I'm doing great, thanks!", Author.Me),
-        Message(
-            "I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!",
-            Author.Agent
-        ),
-        Message("I'm doing great, thanks!", Author.Me),
-        Message("I'm doing great, thanks!", Author.Agent),
-        Message("I'm doing great, thanks!", Author.Me),
-    ).reversed(),
-)
-
 @Composable
-fun Chat(state: ChatUiState) {
+fun Chat(viewModel: ChatViewModel) {
     val listState = rememberLazyListState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         MessageList(
             modifier = Modifier.weight(1f),
-            messages = state.messages,
+            messages = viewModel.messages,
             listState = listState
         )
         UserInput(sendMessage = { message ->
-            state.addMessage(message)
+            viewModel.addMessage(message)
             println("sent!")
         })
     }
@@ -207,18 +182,3 @@ private fun MessageView(modifier: Modifier, message: Message) {
     Text(text = message.text, modifier = modifier)
 }
 
-data class Message(val text: String, val author: Author)
-
-class ChatUiState(initialMessages: List<Message>) {
-    private val _messages: MutableList<Message> = initialMessages.toMutableStateList()
-    val messages: List<Message> = _messages
-
-    fun addMessage(msg: Message) {
-        _messages.add(0, msg)
-    }
-}
-
-sealed interface Author {
-    data object Me : Author
-    data object Agent : Author
-}
