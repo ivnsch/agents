@@ -93,6 +93,11 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
         mutableStateOf(TextFieldValue())
     }
 
+    val sendMessageAndClear = {
+        sendMessage(Message(textState.text, Author.Me))
+        textState = TextFieldValue("")
+    }
+
     Surface(tonalElevation = 1.dp) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -110,7 +115,7 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
                     imeAction = ImeAction.Send,
                 ),
                 keyboardActions = KeyboardActions {
-                    println("in keyboard actions!")
+                    sendMessageAndClear()
                 },
                 maxLines = 1,
                 cursorBrush = SolidColor(LocalContentColor.current),
@@ -118,8 +123,7 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
             )
 
             SendButton(textState.text.isNotBlank(), onClick = {
-                sendMessage(Message(textState.text, Author.Me))
-                textState = TextFieldValue("")
+                sendMessageAndClear()
             })
         }
     }
@@ -147,7 +151,7 @@ private fun SendButton(isEnabled: Boolean, onClick: () -> Unit) {
             disabledContainerColor = Color.Transparent,
             disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
         ),
-        border = border
+        border = border,
     ) {
         Text(
             "Send",
