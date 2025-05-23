@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
@@ -43,6 +44,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.selection.TextSelectionColors
+import androidx.compose.runtime.CompositionLocalProvider
 
 @Composable
 fun Chat(viewModel: ChatViewModel) {
@@ -189,6 +193,15 @@ private val MessageBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
 
 @Composable
 private fun MessageView(modifier: Modifier, message: Message) {
-    Text(text = message.text, modifier = modifier)
+    val selectionColors = TextSelectionColors(
+        handleColor = Color.Blue,
+        backgroundColor = Color.Blue
+    )
+
+    CompositionLocalProvider(LocalTextSelectionColors provides selectionColors) {
+        SelectionContainer {
+            Text(text = message.text, modifier = modifier)
+        }
+    }
 }
 
