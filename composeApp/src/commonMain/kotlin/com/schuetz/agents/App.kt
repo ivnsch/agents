@@ -1,5 +1,6 @@
 package com.schuetz.agents
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +30,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -114,13 +117,29 @@ private fun UserInput(sendMessage: (Message) -> Unit) {
                 textStyle = LocalTextStyle.current.copy(color = LocalContentColor.current),
             )
 
+            val sendButtonEnabled = textState.text.isNotBlank()
+            val border = if (!sendButtonEnabled) {
+                BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                )
+            } else {
+                null
+            }
+
             Button(
                 modifier = Modifier.height(36.dp).width(100.dp),
                 onClick = {
                     sendMessage(Message(textState.text, Author.Me))
                     textState = TextFieldValue("")
                 },
-                contentPadding = PaddingValues(0.dp)
+                enabled = sendButtonEnabled,
+                contentPadding = PaddingValues(0.dp),
+                colors = ButtonDefaults.buttonColors(
+                    disabledContainerColor = Color.Transparent,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f),
+                ),
+                border = border
             ) {
                 Text(
                     "Send",
