@@ -8,7 +8,7 @@ class ChatRepoImpl : ChatRepo {
     override val messages: Flow<List<Message>> = _messages
 
     override suspend fun addMessage(message: Message) {
-        _messages.value = listOf(message) + _messages.value
+        _messages.value += listOf(message)
     }
 }
 
@@ -32,5 +32,4 @@ private val initialMessages = listOf(
     Message("I'm doing great, thanks!", Author.Me),
     Message("I'm doing great, thanks!", Author.Agent),
     Message("I'm doing great, thanks!", Author.Me),
-).reversed()
-
+)

@@ -41,13 +41,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @Composable
 fun Chat(viewModel: ChatViewModel) {
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
-    val messages by viewModel.messages.collectAsState(initial = emptyList())
+    val messages by viewModel.messages
+        .map { it.reversed() }
+        .collectAsState(initial = emptyList())
 
     Column(modifier = Modifier.fillMaxSize()) {
         MessageList(
