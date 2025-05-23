@@ -70,7 +70,6 @@ fun App() {
 
 @Composable
 private fun Chat(state: ChatUiState) {
-    val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
 
     Column(modifier = Modifier.fillMaxSize()) {
