@@ -1,0 +1,11 @@
+CREATE TABLE message (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  text TEXT NOT NULL,
+  author TEXT NOT NULL
+);
+
+selectAll:
+SELECT id, text, author FROM message;
+
+insert:
+INSERT INTO message(text, author) VALUES (?,?);
