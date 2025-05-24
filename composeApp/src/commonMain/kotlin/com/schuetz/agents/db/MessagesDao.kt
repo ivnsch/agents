@@ -2,7 +2,6 @@ package com.schuetz.agents.db
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import com.schuetz.agents.Database
 import com.schuetz.agents.domain.Author
 import com.schuetz.agents.domain.Message
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +18,7 @@ interface MessagesDao {
 // https://github.com/Kotlin/kotlinx.coroutines/issues/3205#issuecomment-2906627080
 val dispatcher = Dispatchers.Default
 
-class MessagesDaoImpl(private val database: Database) : MessagesDao {
+class MessagesDaoImpl(private val database: MyDatabase) : MessagesDao {
     override fun all(): Flow<List<Message>> =
         database.messageQueries
             .selectAll()
