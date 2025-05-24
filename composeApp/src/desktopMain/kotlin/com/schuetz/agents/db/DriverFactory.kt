@@ -5,10 +5,7 @@ import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.schuetz.agents.Database
 import java.util.Properties
 
-actual class DriverFactory {
-    actual fun createDriver(): SqlDriver {
-        val driver: SqlDriver =
-            JdbcSqliteDriver("jdbc:sqlite:db.db", Properties(), Database.Schema)
-        return driver
-    }
+class DesktopDriverFactory : DriverFactory {
+    override fun createDriver(): SqlDriver =
+        JdbcSqliteDriver("jdbc:sqlite:db.db", Properties(), Database.Schema)
 }

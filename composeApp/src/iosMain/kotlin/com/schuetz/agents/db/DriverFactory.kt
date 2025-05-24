@@ -4,8 +4,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 import com.schuetz.agents.Database
 
-actual class DriverFactory {
-    actual fun createDriver(): SqlDriver {
-        return NativeSqliteDriver(Database.Schema, "db.db")
-    }
+class IOSDriverFactory : DriverFactory {
+    override fun createDriver(): SqlDriver =
+        NativeSqliteDriver(Database.Schema, "db.db")
 }

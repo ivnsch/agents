@@ -5,8 +5,7 @@ import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.schuetz.agents.Database
 
-actual class DriverFactory(private val context: Context) {
-    actual fun createDriver(): SqlDriver {
-        return AndroidSqliteDriver(Database.Schema, context, "db.db")
-    }
+class AndroidDriverFactory(private val context: Context) : DriverFactory {
+    override fun createDriver(): SqlDriver =
+        AndroidSqliteDriver(Database.Schema, context, "db.db")
 }

@@ -2,6 +2,6 @@ package com.schuetz.agents.db
 
 import app.cash.sqldelight.db.SqlDriver
 
-expect class DriverFactory {
+interface DriverFactory {
     fun createDriver(): SqlDriver
 }
