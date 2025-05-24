@@ -1,37 +1,13 @@
 package com.schuetz.agents.chat
 
-import com.schuetz.agents.domain.Author
+import com.schuetz.agents.db.MessagesDao
 import com.schuetz.agents.domain.Message
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 
-class ChatRepoImpl : ChatRepo {
-    private val _messages = MutableStateFlow(initialMessages)
-    override val messages: Flow<List<Message>> = _messages
+class ChatRepoImpl(private val messagesDao: MessagesDao) : ChatRepo {
+    override val messages: Flow<List<Message>> = messagesDao.all()
 
     override suspend fun addMessage(message: Message) {
-        _messages.value += listOf(message)
+        messagesDao.insert(message)
     }
 }
-
-private val initialMessages = listOf(
-    Message("Hello!", Author.Me),
-    Message("hi!", Author.Agent),
-    Message("how are you doing?", Author.Me),
-    Message("I'm doing great, thanks!", Author.Agent),
-    Message("I'm doing great, thanks!", Author.Me),
-    Message("I'm doing great, thanks!", Author.Agent),
-    Message(
-        "I'm doing great, thanks! I'm doing great, thanks! I'm doing great, thanks! I'm doing great, thanks!",
-        Author.Me
-    ),
-    Message("I'm doing great, thanks!", Author.Agent),
-    Message("I'm doing great, thanks!", Author.Me),
-    Message(
-        "I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!, I'm doing great, thanks!",
-        Author.Agent
-    ),
-    Message("I'm doing great, thanks!", Author.Me),
-    Message("I'm doing great, thanks!", Author.Agent),
-    Message("I'm doing great, thanks!", Author.Me),
-)
