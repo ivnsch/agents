@@ -9,3 +9,6 @@ SELECT id, text, author FROM message;
 
 insert:
 INSERT INTO message(text, author) VALUES (?,?);
+
+deleteAll:
+DELETE FROM message;
