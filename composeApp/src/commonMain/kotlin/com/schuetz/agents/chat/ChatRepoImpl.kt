@@ -6,7 +6,7 @@ import com.schuetz.agents.domain.MessageInput
 import kotlinx.coroutines.flow.Flow
 
 class ChatRepoImpl(private val messagesDao: MessagesDao) : ChatRepo {
-    override val messages: Flow<List<Message>> = messagesDao.all()
+    override val messages: Flow<List<Message>> = messagesDao.all
 
     override suspend fun addMessage(message: MessageInput) {
         messagesDao.insert(message)

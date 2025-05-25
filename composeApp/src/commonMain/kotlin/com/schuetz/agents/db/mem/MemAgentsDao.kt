@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 class MemAgentsDao : AgentsDao {
     private val agents = MutableStateFlow<List<AgentData>>(emptyList())
 
-    override fun all(): Flow<List<AgentData>> = agents
+    override val all: Flow<List<AgentData>> = agents
 
     override fun insert(agent: AgentInput): Agent {
         val data = AgentData(id = agents.value.size.toLong(), name = agent.name, isMe = agent.isMe)

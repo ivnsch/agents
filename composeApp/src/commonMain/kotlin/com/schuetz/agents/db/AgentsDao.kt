@@ -6,7 +6,8 @@ import comschuetzagents.data.Agent
 import kotlinx.coroutines.flow.Flow
 
 interface AgentsDao {
-    fun all(): Flow<List<AgentData>>
+    val all: Flow<List<AgentData>>
+
     fun insert(agent: AgentInput): Agent
     fun count(): Long
 

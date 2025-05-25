@@ -5,7 +5,7 @@ import com.schuetz.agents.domain.MessageInput
 import kotlinx.coroutines.flow.Flow
 
 interface MessagesDao {
-    fun all(): Flow<List<Message>>
+    val all: Flow<List<Message>>
     fun insert(message: MessageInput)
 }
 

@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.update
 class MemMessagesDao : MessagesDao {
     private val messages = MutableStateFlow<List<Message>>(emptyList())
 
-    override fun all(): Flow<List<Message>> = messages
+    override val all: Flow<List<Message>> = messages
 
     override fun insert(message: MessageInput) {
         val newMessage =

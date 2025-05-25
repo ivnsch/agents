@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 val dispatcher = Dispatchers.Default
 
 class DbMessagesDao(private val database: MyDatabase) : MessagesDao {
-    override fun all(): Flow<List<Message>> =
+    override val all: Flow<List<Message>> =
         database.messageQueries
             .selectWithAuthor()
             .asFlow()

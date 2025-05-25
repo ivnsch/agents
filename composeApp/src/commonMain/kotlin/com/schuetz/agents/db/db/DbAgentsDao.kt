@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 class DbAgentsDao(database: MyDatabase) : AgentsDao {
     private val agentQueries = database.agentQueries
 
-    override fun all(): Flow<List<AgentData>> =
+    override val all: Flow<List<AgentData>> =
         agentQueries
             .selectAll()
             .asFlow()
