@@ -5,7 +5,6 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.AgentInput
-import comschuetzagents.data.Agent
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -23,10 +22,10 @@ class DbAgentsDao(database: MyDatabase) : AgentsDao {
                 }
             }
 
-    override fun insert(agent: AgentInput): Agent {
+    override fun insert(agent: AgentInput): AgentData {
         agentQueries.insert(agent.name, agent.isMe)
         val id = agentQueries.lastInsertId().executeAsOne()
-        return Agent(id, agent.name, agent.isMe)
+        return AgentData(id, agent.name, agent.isMe)
     }
 
     override fun count(): Long =
