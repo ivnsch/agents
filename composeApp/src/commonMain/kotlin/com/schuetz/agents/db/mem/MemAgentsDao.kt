@@ -1,14 +1,18 @@
 package com.schuetz.agents.db.mem
 
 import com.schuetz.agents.db.AgentsDao
+import com.schuetz.agents.db.DataSeeder
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.AgentInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
-class MemAgentsDao : AgentsDao {
-    private val agents = MutableStateFlow<List<AgentData>>(emptyList())
+class MemAgentsDao(seeder: DataSeeder) : AgentsDao {
+    private val seed = seeder.seed()
+    private val agents = MutableStateFlow(
+        listOf(seed.agents.me, seed.agents.dummy)
+    )
 
     override val all: Flow<List<AgentData>> = agents
 

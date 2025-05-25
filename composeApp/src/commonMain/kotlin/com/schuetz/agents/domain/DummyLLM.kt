@@ -1,4 +1,4 @@
-package com.schuetz.agents.agent
+package com.schuetz.agents.domain
 
 import kotlinx.coroutines.delay
 

@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.composeHotReload)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -77,6 +78,8 @@ kotlin {
             api(libs.koin.core)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.sqldelight.coroutines)
+            implementation(libs.navigation.compose)
+            implementation(libs.material.icons.core)
         }
 
         commonTest.dependencies {

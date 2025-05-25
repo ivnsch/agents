@@ -14,7 +14,7 @@ import org.koin.dsl.module
 actual val platformModule: Module
     get() = module {
         single<MessagesDao> { MemMessagesDao() }
-        single<AgentsDao> { MemAgentsDao() }
+        single<AgentsDao> { MemAgentsDao(get()) }
         single<DataSeeder> { MemDataSeeder() }
         single<DriverFactory> { WebDriverFactory() }
     }

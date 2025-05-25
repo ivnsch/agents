@@ -1,6 +1,5 @@
 package com.schuetz.agents.domain
 
-import com.schuetz.agents.agent.LLM
 import comschuetzagents.data.Agent
 
 data class LLMAgent(val data: AgentData, private val llm: LLM) {
