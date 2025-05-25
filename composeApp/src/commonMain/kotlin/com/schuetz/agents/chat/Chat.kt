@@ -20,6 +20,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
@@ -28,6 +30,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,13 +45,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.schuetz.agents.domain.Message
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.foundation.text.selection.TextSelectionColors
-import androidx.compose.runtime.CompositionLocalProvider
-import com.schuetz.agents.domain.Author
-import com.schuetz.agents.domain.Message
 
 @Composable
 fun Chat(viewModel: ChatViewModel) {
@@ -74,13 +73,13 @@ fun Chat(viewModel: ChatViewModel) {
 }
 
 @Composable
-private fun UserInput(sendMessage: (Message) -> Unit) {
+private fun UserInput(sendMessage: (String) -> Unit) {
     var textState by rememberSaveable(stateSaver = TextFieldValue.Saver) {
         mutableStateOf(TextFieldValue())
     }
 
     val sendMessageAndClear = {
-        sendMessage(Message(textState.text, Author.Me))
+        sendMessage(textState.text)
         textState = TextFieldValue("")
     }
 
@@ -159,13 +158,13 @@ private fun MessageList(
     ) {
 
         items(items = messages) { item ->
-            when (item.author) {
-                Author.Agent -> MessageView(
+            if (item.author.isMe) {
+                MessageBubble(message = item)
+            } else {
+                MessageView(
                     message = item,
                     modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp)
                 )
-
-                Author.Me -> MessageBubble(message = item)
             }
             Spacer(modifier = Modifier.height(4.dp))
         }

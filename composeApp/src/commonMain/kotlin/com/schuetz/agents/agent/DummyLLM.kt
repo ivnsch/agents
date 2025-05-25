@@ -1,13 +1,11 @@
 package com.schuetz.agents.agent
 
-import com.schuetz.agents.domain.Author
-import com.schuetz.agents.domain.Message
 import kotlinx.coroutines.delay
 
 class DummyLLM : LLM {
-    override suspend fun prompt(message: Message): Message {
+    override suspend fun prompt(message: String): String {
         delay(1000)
-        return Message(text = randomReplies.random(), author = Author.Agent)
+        return randomReplies.random()
     }
 }
 

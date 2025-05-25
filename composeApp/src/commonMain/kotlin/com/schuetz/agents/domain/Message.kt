@@ -1,8 +1,5 @@
 package com.schuetz.agents.domain
 
-data class Message(val text: String, val author: Author)
+data class MessageInput(val text: String, val author: AgentData)
 
-sealed interface Author {
-    data object Me : Author
-    data object Agent : Author
-}
+data class Message(val id: Long, val text: String, val author: AgentData)

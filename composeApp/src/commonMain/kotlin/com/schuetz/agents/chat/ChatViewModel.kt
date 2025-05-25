@@ -1,19 +1,22 @@
 package com.schuetz.agents.chat
 
 import androidx.lifecycle.ViewModel
-import com.schuetz.agents.agent.LLM
+import com.schuetz.agents.domain.AgentData
+import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.Message
+import com.schuetz.agents.domain.MessageInput
 import kotlinx.coroutines.flow.Flow
 
 class ChatViewModel(
     private val chatRepo: ChatRepo,
-    private val llm: LLM
+    private val agent: LLMAgent,
+    private val me: AgentData
 ) : ViewModel() {
     val messages: Flow<List<Message>> = chatRepo.messages
 
-    suspend fun sendMessage(message: Message) {
-        chatRepo.addMessage(message)
-        val reply = llm.prompt(message)
-        chatRepo.addMessage(reply)
+    suspend fun sendMessage(message: String) {
+        chatRepo.addMessage(MessageInput(message, me))
+        val reply = agent.prompt(message)
+        chatRepo.addMessage(MessageInput(reply, agent.data))
     }
 }

@@ -1,0 +1,22 @@
+import kotlin.Boolean;
+
+CREATE TABLE agent (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  is_me INTEGER AS Boolean NOT NULL
+);
+
+selectAll:
+SELECT id, name, is_me FROM agent;
+
+insert:
+INSERT INTO agent(name, is_me) VALUES (?, ?);
+
+deleteAll:
+DELETE FROM agent;
+
+countAgents:
+SELECT COUNT(*) FROM agent;
+
+lastInsertId:
+SELECT last_insert_rowid();

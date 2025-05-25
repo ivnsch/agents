@@ -1,7 +1,8 @@
 CREATE TABLE message (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   text TEXT NOT NULL,
-  author TEXT NOT NULL
+  author INTEGER NOT NULL,
+  FOREIGN KEY(author) REFERENCES agent(id)
 );
 
 selectAll:
@@ -12,3 +13,11 @@ INSERT INTO message(text, author) VALUES (?,?);
 
 deleteAll:
 DELETE FROM message;
+
+selectWithAuthor:
+SELECT message.id, message.text,
+agent.id AS author_id,
+agent.name AS author_name,
+agent.is_me AS author_is_me
+FROM message
+JOIN agent ON message.author = agent.id;

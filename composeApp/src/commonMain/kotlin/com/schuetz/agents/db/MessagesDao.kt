@@ -2,15 +2,16 @@ package com.schuetz.agents.db
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import com.schuetz.agents.domain.Author
+import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.Message
+import com.schuetz.agents.domain.MessageInput
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 interface MessagesDao {
     fun all(): Flow<List<Message>>
-    fun insert(message: Message)
+    fun insert(message: MessageInput)
 }
 
 // TODO
@@ -21,33 +22,20 @@ val dispatcher = Dispatchers.Default
 class MessagesDaoImpl(private val database: MyDatabase) : MessagesDao {
     override fun all(): Flow<List<Message>> =
         database.messageQueries
-            .selectAll()
+            .selectWithAuthor()
             .asFlow()
             .mapToList(dispatcher)
             .map { messages ->
                 messages.map {
-                    Message(it.text, toAuthor(it.author))
+                    Message(
+                        it.id,
+                        it.text,
+                        AgentData(id = it.author_id, name = it.author_name, isMe = it.author_is_me)
+                    )
                 }
             }
 
-    override fun insert(message: Message) {
-        database.messageQueries.insert(message.text, message.author.toDbStr())
+    override fun insert(message: MessageInput) {
+        database.messageQueries.insert(message.text, message.author.id)
     }
 }
-
-private fun toAuthor(dbStr: String) = when (dbStr) {
-    AUTHOR_ME_IDENTIFIER -> Author.Me
-    AUTHOR_AGENT_IDENTIFIER -> Author.Agent
-    else -> error("Invalid author id: $dbStr")
-}
-
-private fun Author.toDbStr() = when (this) {
-    Author.Agent -> AUTHOR_AGENT_IDENTIFIER
-    Author.Me -> AUTHOR_ME_IDENTIFIER
-}
-
-// with some noise at the end to avoid (unlikely) collisions with agent names
-private const val AUTHOR_ME_IDENTIFIER = "me_##"
-
-// later this will be the specific agent name
-private const val AUTHOR_AGENT_IDENTIFIER = "agent"
