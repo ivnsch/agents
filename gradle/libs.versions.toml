@@ -21,6 +21,7 @@ logback = "1.5.18"
 koin = "4.0.0"
 sqldelight = "2.1.0"
 kotlin-serialization = "2.0.21"
+compose-icons-core = "1.7.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -54,6 +55,8 @@ sqldelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
+
+material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "compose-icons-core" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

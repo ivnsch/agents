@@ -79,6 +79,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.sqldelight.coroutines)
             implementation(libs.navigation.compose)
+            implementation(libs.material.icons.core)
         }
 
         commonTest.dependencies {
