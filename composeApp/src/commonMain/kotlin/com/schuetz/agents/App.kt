@@ -2,7 +2,7 @@ package com.schuetz.agents
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import com.schuetz.agents.agent.LLM
+import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.chat.Chat
 import com.schuetz.agents.chat.ChatViewModel
 import com.schuetz.agents.db.DataSeeder

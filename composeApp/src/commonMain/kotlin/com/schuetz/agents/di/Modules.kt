@@ -1,7 +1,7 @@
 package com.schuetz.agents.di
 
-import com.schuetz.agents.agent.DummyLLM
-import com.schuetz.agents.agent.LLM
+import com.schuetz.agents.domain.DummyLLM
+import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.chat.ChatRepo
 import com.schuetz.agents.chat.ChatRepoImpl
 import com.schuetz.agents.chat.ChatViewModel
