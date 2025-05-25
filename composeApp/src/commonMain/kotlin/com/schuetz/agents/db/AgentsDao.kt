@@ -17,7 +17,7 @@ interface AgentsDao {
     fun getAll(): List<AgentData>
 }
 
-class AgentsDaoImpl(database: MyDatabase) : AgentsDao {
+class DbAgentsDao(database: MyDatabase) : AgentsDao {
     private val agentQueries = database.agentQueries
 
     override fun all(): Flow<List<AgentData>> =

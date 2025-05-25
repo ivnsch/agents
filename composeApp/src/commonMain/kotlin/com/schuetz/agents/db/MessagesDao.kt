@@ -19,7 +19,7 @@ interface MessagesDao {
 // https://github.com/Kotlin/kotlinx.coroutines/issues/3205#issuecomment-2906627080
 val dispatcher = Dispatchers.Default
 
-class MessagesDaoImpl(private val database: MyDatabase) : MessagesDao {
+class DbMessagesDao(private val database: MyDatabase) : MessagesDao {
     override fun all(): Flow<List<Message>> =
         database.messageQueries
             .selectWithAuthor()

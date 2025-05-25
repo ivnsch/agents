@@ -10,7 +10,7 @@ interface DataSeeder {
     fun seed(): SeededData
 }
 
-class DataSeederImpl(private val agentsDao: AgentsDao) : DataSeeder {
+class DbDataSeeder(private val agentsDao: AgentsDao) : DataSeeder {
     // TODO remove
     override fun seed(): SeededData = if (agentsDao.count() == 0L) {
         SeededData(
