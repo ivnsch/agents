@@ -7,14 +7,14 @@ import com.schuetz.agents.chat.ChatRepoImpl
 import com.schuetz.agents.chat.ChatViewModel
 import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.db.DataSeeder
+import com.schuetz.agents.db.MessagesDao
 import com.schuetz.agents.db.db.DatabaseFactory
 import com.schuetz.agents.db.db.DatabaseFactoryImpl
-import com.schuetz.agents.db.MessagesDao
-import com.schuetz.agents.db.db.DbAgentsDao
-import com.schuetz.agents.db.db.DbDataSeeder
-import com.schuetz.agents.db.db.DbMessagesDao
 import com.schuetz.agents.db.db.MyDatabase
 import com.schuetz.agents.db.db.MyDatabaseImpl
+import com.schuetz.agents.db.mem.MemAgentsDao
+import com.schuetz.agents.db.mem.MemDataSeeder
+import com.schuetz.agents.db.mem.MemMessagesDao
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.LLMAgent
 import org.koin.core.module.Module
@@ -26,12 +26,12 @@ expect val platformModule: Module
 
 val sharedModule = module {
     single<ChatRepo> { ChatRepoImpl(get()) }
-    single<MessagesDao> { DbMessagesDao(get()) }
-    single<AgentsDao> { DbAgentsDao(get()) }
+    single<MessagesDao> { MemMessagesDao() }
+    single<AgentsDao> { MemAgentsDao() }
+    single<DataSeeder> { MemDataSeeder() }
     single<LLM> { DummyLLM() }
     single<MyDatabase> { MyDatabaseImpl(get()) }
     single<DatabaseFactory> { DatabaseFactoryImpl(get()) }
-    single<DataSeeder> { DbDataSeeder(get()) }
     viewModelOf(::ChatViewModel)
     viewModel { (agent: LLMAgent, me: AgentData) -> ChatViewModel(get(), agent, me) }
 }
