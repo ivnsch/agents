@@ -1,7 +1,7 @@
 package com.schuetz.agents.di
 
 import com.schuetz.agents.db.DesktopDriverFactory
-import com.schuetz.agents.db.DriverFactory
+import com.schuetz.agents.db.db.DriverFactory
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

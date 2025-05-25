@@ -1,4 +1,4 @@
-package com.schuetz.agents.db
+package com.schuetz.agents.db.db
 
 import com.schuetz.agents.Database
 

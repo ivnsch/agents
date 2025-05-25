@@ -3,6 +3,7 @@ package com.schuetz.agents.db
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
 import com.schuetz.agents.Database
+import com.schuetz.agents.db.db.DriverFactory
 import java.util.Properties
 
 class DesktopDriverFactory : DriverFactory {

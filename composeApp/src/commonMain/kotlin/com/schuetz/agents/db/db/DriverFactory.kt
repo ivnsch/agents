@@ -1,4 +1,4 @@
-package com.schuetz.agents.db
+package com.schuetz.agents.db.db
 
 import app.cash.sqldelight.db.SqlDriver
 
