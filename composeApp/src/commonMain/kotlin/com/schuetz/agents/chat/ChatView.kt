@@ -159,10 +159,10 @@ private fun MessageList(
 
         items(items = messages) { item ->
             if (item.author.isMe) {
-                MessageBubble(message = item)
+                MessageBubble(message = item.text)
             } else {
                 MessageView(
-                    message = item,
+                    message = item.text,
                     modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp)
                 )
             }
@@ -172,7 +172,7 @@ private fun MessageList(
 }
 
 @Composable
-private fun MessageBubble(message: Message) {
+private fun MessageBubble(message: String) {
     Row(
         horizontalArrangement = Arrangement.End,
         modifier = Modifier.fillMaxWidth()
@@ -193,7 +193,7 @@ private fun MessageBubble(message: Message) {
 private val MessageBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
 
 @Composable
-private fun MessageView(modifier: Modifier, message: Message) {
+private fun MessageView(modifier: Modifier, message: String) {
     val selectionColors = TextSelectionColors(
         handleColor = Color.Blue,
         backgroundColor = Color.Blue
@@ -201,7 +201,7 @@ private fun MessageView(modifier: Modifier, message: Message) {
 
     CompositionLocalProvider(LocalTextSelectionColors provides selectionColors) {
         SelectionContainer {
-            Text(text = message.text, modifier = modifier)
+            Text(text = message, modifier = modifier)
         }
     }
 }
