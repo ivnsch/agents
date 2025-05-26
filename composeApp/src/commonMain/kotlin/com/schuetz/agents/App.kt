@@ -12,7 +12,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -42,19 +45,23 @@ import org.koin.core.parameter.parametersOf
 @Preview
 fun App() {
     val navController: NavHostController = rememberNavController()
+    val titleState = remember { mutableStateOf("") }
+
     MaterialTheme {
         Column {
-            TopBar(navController)
+            TopBar(navController, titleState.value)
             NavHost(
                 navController = navController,
                 startDestination = AgentsNav,
                 modifier = Modifier.fillMaxSize(),
             ) {
                 composable<AgentsNav> {
+                    setTitle(titleState, "Agents")
                     AgentsScreen(navController)
                 }
                 composable<ChatNav> { backStackEntry ->
                     val args = backStackEntry.toRoute<ChatNav>()
+                    setTitle(titleState, "Chat with ${args.name}")
                     ChatNavScreen(args.toAgentData())
                 }
             }
@@ -64,13 +71,13 @@ fun App() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavHostController) {
+fun TopBar(navController: NavHostController, title: String) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val canPop = remember(backStackEntry) {
         navController.previousBackStackEntry != null
     }
     return TopAppBar(
-        title = { Text("Agents") },
+        title = { Text(title) },
         navigationIcon = {
             if (canPop) {
                 IconButton(onClick = { navController.popBackStack() }) {
@@ -114,5 +121,12 @@ fun ChatNavScreen(agent: AgentData) {
             )
         })
         Chat(viewModel)
+    }
+}
+
+@Composable
+fun setTitle(titleState: MutableState<String>, title: String) {
+    LaunchedEffect(title) {
+        titleState.value = title
     }
 }
