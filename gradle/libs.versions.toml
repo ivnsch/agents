@@ -57,6 +57,7 @@ sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", 
 navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 
 material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "compose-icons-core" }
+material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMultiplatform" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
