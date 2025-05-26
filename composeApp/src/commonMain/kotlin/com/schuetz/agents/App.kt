@@ -1,5 +1,6 @@
 package com.schuetz.agents
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -24,6 +26,7 @@ import com.schuetz.agents.agents.AgentsViewModel
 import com.schuetz.agents.chat.Chat
 import com.schuetz.agents.chat.ChatViewModel
 import com.schuetz.agents.db.DataSeeder
+import com.schuetz.agents.db.SeededData
 import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.LLMAgent
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -89,13 +92,23 @@ fun ChatNavScreen() {
     val dataSeeder = koinInject<DataSeeder>()
     val llm = koinInject<LLM>()
 
-    val viewModel = koinViewModel<ChatViewModel>(parameters = {
-        val seed = dataSeeder.seed()
-        val llmDummyAgent = LLMAgent(seed.agents.dummy, llm)
-        parametersOf(
-            llmDummyAgent,
-            seed.agents.me
-        )
-    })
-    Chat(viewModel)
+    val seedState = produceState<SeededData?>(initialValue = null) {
+        value = dataSeeder.seed()
+    }
+    val seed = seedState.value
+
+    if (seed == null) {
+        // this could be a progress indicator, but might cause flickering
+        // since it's a very short operation
+        Box {}
+    } else {
+        val viewModel = koinViewModel<ChatViewModel>(parameters = {
+            val llmDummyAgent = LLMAgent(seed.agents.dummy, llm)
+            parametersOf(
+                llmDummyAgent,
+                seed.agents.me
+            )
+        })
+        Chat(viewModel)
+    }
 }

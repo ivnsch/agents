@@ -6,6 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MessagesDao {
     val all: Flow<List<Message>>
-    fun insert(message: MessageInput)
+    suspend fun insert(message: MessageInput)
 }
-

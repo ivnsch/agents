@@ -31,7 +31,7 @@ class DbMessagesDao(private val database: MyDatabase) : MessagesDao {
                 }
             }
 
-    override fun insert(message: MessageInput) {
+    override suspend fun insert(message: MessageInput) {
         database.messageQueries.insert(message.text, message.author.id)
     }
 }

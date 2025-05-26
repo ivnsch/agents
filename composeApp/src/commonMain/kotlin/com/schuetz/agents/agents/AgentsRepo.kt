@@ -10,5 +10,5 @@ interface AgentsRepo {
     val otherAgents: Flow<List<AgentData>>
         get() = agents.map { agents -> agents.filter { !it.isMe } }
 
-    fun addAgent(agent: AgentInput)
+    suspend fun addAgent(agent: AgentInput)
 }

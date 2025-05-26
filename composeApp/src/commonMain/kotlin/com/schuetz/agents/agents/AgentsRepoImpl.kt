@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class AgentsRepoImpl(private val agentsDao: AgentsDao) : AgentsRepo {
     override val agents: Flow<List<AgentData>> = agentsDao.all
 
-    override fun addAgent(agent: AgentInput) {
+    override suspend fun addAgent(agent: AgentInput) {
         agentsDao.insert(agent)
     }
 }

@@ -5,7 +5,7 @@ import com.schuetz.agents.domain.AgentData
 // TODO temporary implementation, this data will come from user flows
 interface DataSeeder {
     // TODO remove
-    fun seed(): SeededData
+    suspend fun seed(): SeededData
 }
 
 data class SeededData(val agents: Agents) {

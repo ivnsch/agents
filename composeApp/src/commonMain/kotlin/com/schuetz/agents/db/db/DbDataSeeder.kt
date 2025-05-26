@@ -7,7 +7,7 @@ import com.schuetz.agents.domain.AgentInput
 
 class DbDataSeeder(private val agentsDao: AgentsDao) : DataSeeder {
     // TODO remove
-    override fun seed(): SeededData = if (agentsDao.count() == 0L) {
+    override suspend fun seed(): SeededData = if (agentsDao.count() == 0L) {
         SeededData(
             agents = SeededData.Agents(
                 me = agentsDao.insert(AgentInput(name = "me", isMe = true)),

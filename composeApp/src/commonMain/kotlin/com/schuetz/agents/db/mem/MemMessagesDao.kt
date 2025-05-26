@@ -12,7 +12,7 @@ class MemMessagesDao : MessagesDao {
 
     override val all: Flow<List<Message>> = messages
 
-    override fun insert(message: MessageInput) {
+    override suspend fun insert(message: MessageInput) {
         val newMessage =
             Message(id = messages.value.size.toLong(), text = message.text, author = message.author)
         messages.update { it + newMessage }

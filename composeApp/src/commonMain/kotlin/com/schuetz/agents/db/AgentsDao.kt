@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface AgentsDao {
     val all: Flow<List<AgentData>>
 
-    fun insert(agent: AgentInput): AgentData
-    fun count(): Long
+    suspend fun insert(agent: AgentInput): AgentData
+    suspend fun count(): Long
 
     // TODO remove
-    fun getAll(): List<AgentData>
+    suspend fun getAll(): List<AgentData>
 }
 

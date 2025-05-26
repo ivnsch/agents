@@ -12,5 +12,5 @@ class MemDataSeeder : DataSeeder {
         )
     )
 
-    override fun seed(): SeededData = data
+    override suspend fun seed(): SeededData = data
 }
