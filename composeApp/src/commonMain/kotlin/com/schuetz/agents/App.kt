@@ -21,12 +21,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.schuetz.agents.NavConversions.toAgentData
+import com.schuetz.agents.NavConversions.toChatNav
 import com.schuetz.agents.agents.Agents
 import com.schuetz.agents.agents.AgentsViewModel
 import com.schuetz.agents.chat.Chat
 import com.schuetz.agents.chat.ChatViewModel
 import com.schuetz.agents.db.DataSeeder
 import com.schuetz.agents.db.SeededData
+import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.LLMAgent
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -44,13 +48,14 @@ fun App() {
             NavHost(
                 navController = navController,
                 startDestination = AgentsNav,
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
                 composable<AgentsNav> {
                     AgentsScreen(navController)
                 }
-                composable<ChatNav> {
-                    ChatNavScreen()
+                composable<ChatNav> { backStackEntry ->
+                    val args = backStackEntry.toRoute<ChatNav>()
+                    ChatNavScreen(args.toAgentData())
                 }
             }
         }
@@ -82,13 +87,13 @@ fun TopBar(navController: NavHostController) {
 @Composable
 fun AgentsScreen(navController: NavHostController) {
     val viewModel = koinViewModel<AgentsViewModel>()
-    return Agents(viewModel, onAgentSelected = {
-        navController.navigate(route = ChatNav)
+    return Agents(viewModel, onAgentSelected = { agent ->
+        navController.navigate(route = toChatNav(agent))
     })
 }
 
 @Composable
-fun ChatNavScreen() {
+fun ChatNavScreen(agent: AgentData) {
     val dataSeeder = koinInject<DataSeeder>()
     val llm = koinInject<LLM>()
 
@@ -103,9 +108,8 @@ fun ChatNavScreen() {
         Box {}
     } else {
         val viewModel = koinViewModel<ChatViewModel>(parameters = {
-            val llmDummyAgent = LLMAgent(seed.agents.dummy, llm)
             parametersOf(
-                llmDummyAgent,
+                LLMAgent(agent, llm),
                 seed.agents.me
             )
         })
