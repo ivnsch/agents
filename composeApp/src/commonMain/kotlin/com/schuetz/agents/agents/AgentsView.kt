@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,15 +17,10 @@ import com.schuetz.agents.domain.AgentData
 
 @Composable
 fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
-    val listState = rememberLazyListState()
     val agents by viewModel.otherAgents
         .collectAsState(initial = emptyList())
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize(),
-        state = listState,
-    ) {
-
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(agents) { item ->
             Text(
                 modifier = Modifier
