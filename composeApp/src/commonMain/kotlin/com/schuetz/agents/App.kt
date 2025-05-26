@@ -31,58 +31,71 @@ import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun App() {
     val navController: NavHostController = rememberNavController()
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    val canPop = remember(backStackEntry) {
-        navController.previousBackStackEntry != null
-    }
-
     MaterialTheme {
         Column {
-            TopAppBar(
-                title = { Text("Agents") },
-                navigationIcon = {
-                    if (canPop) {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = "Back"
-                            )
-                        }
-                    }
-                }
-            )
+            TopBar(navController)
             NavHost(
                 navController = navController,
                 startDestination = AgentsNav,
                 modifier = Modifier.fillMaxSize()
             ) {
                 composable<AgentsNav> {
-                    val viewModel = koinViewModel<AgentsViewModel>()
-                    Agents(viewModel, onAgentSelected = {
-                        navController.navigate(route = ChatNav)
-                    })
+                    AgentsScreen(navController)
                 }
                 composable<ChatNav> {
-                    val dataSeeder = koinInject<DataSeeder>()
-                    val llm = koinInject<LLM>()
-
-                    val viewModel = koinViewModel<ChatViewModel>(parameters = {
-                        val seed = dataSeeder.seed()
-                        val llmDummyAgent = LLMAgent(seed.agents.dummy, llm)
-                        parametersOf(
-                            llmDummyAgent,
-                            seed.agents.me
-                        )
-                    })
-                    Chat(viewModel)
-
+                    ChatNavScreen()
                 }
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TopBar(navController: NavHostController) {
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val canPop = remember(backStackEntry) {
+        navController.previousBackStackEntry != null
+    }
+    return TopAppBar(
+        title = { Text("Agents") },
+        navigationIcon = {
+            if (canPop) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun AgentsScreen(navController: NavHostController) {
+    val viewModel = koinViewModel<AgentsViewModel>()
+    return Agents(viewModel, onAgentSelected = {
+        navController.navigate(route = ChatNav)
+    })
+}
+
+@Composable
+fun ChatNavScreen() {
+    val dataSeeder = koinInject<DataSeeder>()
+    val llm = koinInject<LLM>()
+
+    val viewModel = koinViewModel<ChatViewModel>(parameters = {
+        val seed = dataSeeder.seed()
+        val llmDummyAgent = LLMAgent(seed.agents.dummy, llm)
+        parametersOf(
+            llmDummyAgent,
+            seed.agents.me
+        )
+    })
+    Chat(viewModel)
 }
