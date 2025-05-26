@@ -4,7 +4,7 @@ import kotlinx.coroutines.delay
 
 class DummyLLM : LLM {
     override suspend fun prompt(message: String): String {
-        delay(1000)
+        delay(2000)
         return randomReplies.random()
     }
 }

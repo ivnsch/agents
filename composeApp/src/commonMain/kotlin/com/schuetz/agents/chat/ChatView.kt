@@ -31,9 +31,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -46,7 +48,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.schuetz.agents.domain.Message
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
 @Composable
@@ -56,12 +61,15 @@ fun Chat(viewModel: ChatViewModel) {
     val messages by viewModel.messages
         .map { it.reversed() }
         .collectAsState(initial = emptyList())
+    val isWaitingForReply by viewModel.isWaitingForReply
+        .collectAsState(initial = false)
 
     Column(modifier = Modifier.fillMaxSize()) {
         MessageList(
             modifier = Modifier.weight(1f),
             messages = messages,
-            listState = listState
+            listState = listState,
+            isWaitingForReply = isWaitingForReply
         )
         UserInput(sendMessage = { message ->
             scope.launch {
@@ -150,26 +158,54 @@ private fun MessageList(
     modifier: Modifier = Modifier,
     messages: List<Message>,
     listState: LazyListState,
+    isWaitingForReply: Boolean = false
 ) {
     LazyColumn(
         modifier = modifier,
         state = listState,
         reverseLayout = true
     ) {
-
+        if (isWaitingForReply) {
+            item {
+                ThinkingBubble()
+                MessageSpacer()
+            }
+        }
         items(items = messages) { item ->
             if (item.author.isMe) {
                 MessageBubble(message = item.text)
             } else {
-                MessageView(
-                    message = item.text,
-                    modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp)
-                )
+                OtherMessageView(item.text)
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            MessageSpacer()
         }
     }
 }
+
+@Composable
+private fun ThinkingBubble() {
+    var dots by remember { mutableStateOf(".") }
+    LaunchedEffect(Unit) {
+        while (currentCoroutineContext().isActive) {
+            delay(500)
+            dots = when (dots.length) {
+                1 -> ".."
+                2 -> "..."
+                else -> "."
+            }
+        }
+    }
+    OtherMessageView(dots)
+}
+
+@Composable
+private fun MessageSpacer() = Spacer(modifier = Modifier.height(4.dp))
+
+@Composable
+private fun OtherMessageView(message: String) = MessageView(
+    message = message,
+    modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp)
+)
 
 @Composable
 private fun MessageBubble(message: String) {
