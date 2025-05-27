@@ -64,6 +64,7 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.androidx.compose)
             implementation(libs.sqldelight.android)
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -81,6 +82,10 @@ kotlin {
             implementation(libs.navigation.compose)
             implementation(libs.material.icons.core)
             implementation(libs.material3)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
 
         commonTest.dependencies {
@@ -90,10 +95,14 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.sqldelight.jvm)
-
+            implementation(libs.ktor.client.okhttp)
         }
         nativeMain.dependencies {
             implementation(libs.sqldelight.native)
+            implementation(libs.ktor.client.darwin)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.ktor.js)
         }
     }
 }

@@ -20,11 +20,7 @@ class ChatViewModel(
 
     suspend fun sendMessage(message: String) {
         _isWaitingForReply.value = true
-
-        chatRepo.addMessage(MessageInput(message, me))
-        val reply = agent.prompt(message)
-        chatRepo.addMessage(MessageInput(reply, agent.data))
-
+        chatRepo.sendMessage(MessageInput(message, me), agent)
         _isWaitingForReply.value = false
     }
 }
