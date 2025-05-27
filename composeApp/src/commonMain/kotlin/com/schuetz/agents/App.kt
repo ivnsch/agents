@@ -36,6 +36,8 @@ import com.schuetz.agents.db.SeededData
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.LLMAgent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -44,6 +46,8 @@ import org.koin.core.parameter.parametersOf
 @Composable
 @Preview
 fun App() {
+    InitAppServiceEffect()
+
     val navController: NavHostController = rememberNavController()
     val titleState = remember { mutableStateOf("") }
 
@@ -65,6 +69,22 @@ fun App() {
                     ChatNavScreen(args.toAgentData())
                 }
             }
+        }
+    }
+}
+
+// Run long-running operations at app start (like loading a global preference)
+// This approach:
+// - keeps coroutines / dispatching logic out of core services
+// - convenience: App() is the earliest common point for multiplatform
+@Composable
+inline fun InitAppServiceEffect() {
+    val initAppService = koinInject<InitAppService>()
+    LaunchedEffect(Unit) {
+        // Dispatchers.IO currently not working
+        // see https://github.com/Kotlin/kotlinx.coroutines/issues/3205#issuecomment-2906627080
+        withContext(Dispatchers.Default) {
+            initAppService.init()
         }
     }
 }

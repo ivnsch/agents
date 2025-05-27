@@ -22,6 +22,7 @@ koin = "4.0.0"
 sqldelight = "2.1.0"
 kotlin-serialization = "2.0.21"
 compose-icons-core = "1.7.3"
+data-store = "1.1.7"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,6 +44,14 @@ ktor-serverCore = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor
 ktor-serverNetty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
 ktor-serverTestHost = { module = "io.ktor:ktor-server-test-host-jvm", version.ref = "ktor" }
 
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -58,6 +67,9 @@ navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-co
 
 material-icons-core = { module = "org.jetbrains.compose.material:material-icons-core", version.ref = "compose-icons-core" }
 material3 = { module = "org.jetbrains.compose.material3:material3", version.ref = "composeMultiplatform" }
+
+data-store = { module = "androidx.datastore:datastore", version.ref = "data-store" }
+data-store-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "data-store" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

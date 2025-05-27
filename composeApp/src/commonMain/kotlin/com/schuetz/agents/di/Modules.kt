@@ -1,5 +1,8 @@
 package com.schuetz.agents.di
 
+import com.schuetz.agents.InitAppService
+import com.schuetz.agents.InitAppServiceImpl
+import com.schuetz.agents.PrefsFactory
 import com.schuetz.agents.agents.AgentsRepo
 import com.schuetz.agents.agents.AgentsRepoImpl
 import com.schuetz.agents.agents.AgentsViewModel
@@ -17,9 +20,14 @@ import com.schuetz.agents.db.mem.MemAgentsDao
 import com.schuetz.agents.db.mem.MemDataSeeder
 import com.schuetz.agents.db.mem.MemMessagesDao
 import com.schuetz.agents.domain.AgentData
-import com.schuetz.agents.domain.DummyLLM
+import com.schuetz.agents.domain.HuggingFaceLLM
 import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.LLMAgent
+import com.schuetz.agents.http.HttpClientFactory
+import com.schuetz.agents.huggingface.HuggingFaceClient
+import com.schuetz.agents.huggingface.HuggingFaceClientImpl
+import com.schuetz.agents.huggingface.HuggingFaceTokenStore
+import com.schuetz.agents.prefs.Prefs
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -28,14 +36,23 @@ import org.koin.dsl.module
 expect val platformModule: Module
 
 val sharedModule = module {
-    single<ChatRepo> { ChatRepoImpl(get()) }
+    single<ChatRepo> { ChatRepoImpl(get(), get()) }
     single<AgentsRepo> { AgentsRepoImpl(get()) }
     single<MessagesDao> { MemMessagesDao() }
     single<AgentsDao> { MemAgentsDao(get()) }
     single<DataSeeder> { MemDataSeeder() }
-    single<LLM> { DummyLLM() }
+    single<LLM> { HuggingFaceLLM(get()) }
     single<MyDatabase> { MyDatabaseImpl(get()) }
     single<DatabaseFactory> { DatabaseFactoryImpl(get()) }
+
+    single { HttpClientFactory.create(get()) }
+
+    single { HuggingFaceTokenStore(get()) }
+    single<HuggingFaceClient> { HuggingFaceClientImpl(get(), get()) }
+
+    single<InitAppService> { InitAppServiceImpl(get()) }
+
+    single<Prefs> { get<PrefsFactory>().createPrefs() }
 
     viewModelOf(::ChatViewModel)
     viewModelOf(::AgentsViewModel)
