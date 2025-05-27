@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface ChatRepo {
     val messages: Flow<List<Message>>
 
-    suspend fun sendMessage(message: MessageInput, agent: LLMAgent)
+    suspend fun sendMessage(message: MessageInput, agent: LLMAgent): Result<Unit>
 }

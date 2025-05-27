@@ -15,12 +15,21 @@ class ChatViewModel(
 ) : ViewModel() {
     val messages: Flow<List<Message>> = chatRepo.messages
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: Flow<String?> = _errorMessage
+
     private val _isWaitingForReply = MutableStateFlow(false)
     val isWaitingForReply: Flow<Boolean> = _isWaitingForReply
 
     suspend fun sendMessage(message: String) {
         _isWaitingForReply.value = true
-        chatRepo.sendMessage(MessageInput(message, me), agent)
+        chatRepo.sendMessage(MessageInput(message, me), agent).onFailure { error ->
+            _errorMessage.emit(error.message ?: "Unknown error")
+        }
         _isWaitingForReply.value = false
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
     }
 }

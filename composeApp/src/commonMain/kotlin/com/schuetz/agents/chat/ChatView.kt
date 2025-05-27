@@ -50,6 +50,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.schuetz.agents.common.ErrorDialog
 import com.schuetz.agents.domain.Message
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
@@ -68,6 +69,8 @@ fun Chat(viewModel: ChatViewModel) {
         .collectAsState(initial = emptyList())
     val isWaitingForReply by viewModel.isWaitingForReply
         .collectAsState(initial = false)
+    val errorMessage = viewModel.errorMessage
+        .collectAsState(initial = null)
 
     Column(
         modifier = Modifier
@@ -89,6 +92,13 @@ fun Chat(viewModel: ChatViewModel) {
                 println("sent!")
             }
         })
+    }
+
+    errorMessage.value?.let { error ->
+        ErrorDialog(
+            message = error,
+            onDismiss = { viewModel.clearError() }
+        )
     }
 }
 

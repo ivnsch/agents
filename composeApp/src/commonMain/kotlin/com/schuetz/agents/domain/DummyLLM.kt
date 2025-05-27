@@ -3,9 +3,9 @@ package com.schuetz.agents.domain
 import kotlinx.coroutines.delay
 
 class DummyLLM : LLM {
-    override suspend fun prompt(message: String): String {
+    override suspend fun prompt(message: String): Result<String> {
         delay(2000)
-        return randomReplies.random()
+        return Result.success(randomReplies.random())
     }
 }
 

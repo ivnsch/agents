@@ -11,16 +11,15 @@ import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 
 interface HuggingFaceClient {
-    suspend fun completions(prompt: String): String
+    suspend fun completions(prompt: String): Result<String>
 }
 
 class HuggingFaceClientImpl(
     private val client: HttpClient,
     private val tokenStore: HuggingFaceTokenStore
 ) : HuggingFaceClient {
-    override suspend fun completions(prompt: String): String {
-        // TODO error handling
-        val authToken = tokenStore.token.value ?: ""
+    override suspend fun completions(prompt: String): Result<String> {
+        val authToken = tokenStore.token.value ?: return Result.failure(Exception("No token set"))
 
         val response = client.post("https://router.huggingface.co/cerebras/v1/chat/completions") {
             headers {
@@ -38,9 +37,11 @@ class HuggingFaceClientImpl(
             }
         }
 
-        val choices = response.body<CompletionsResponse>().choices
-        // TODO Result type
-        return choices.firstOrNull()?.message?.content ?: error("No choices in response")
+        return runCatching {
+            val choices = response.body<CompletionsResponse>().choices
+            choices.firstOrNull()?.message?.content
+                ?: throw Exception("No choices found in completion response")
+        }
     }
 }
 

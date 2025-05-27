@@ -13,9 +13,9 @@ class ChatRepoImpl(
 ) : ChatRepo {
     override val messages: Flow<List<Message>> = messagesDao.all
 
-    override suspend fun sendMessage(message: MessageInput, agent: LLMAgent) {
-        messagesDao.insert(message)
-        val reply = llm.prompt(message.text)
-        messagesDao.insert(MessageInput(reply, agent.data))
-    }
+    override suspend fun sendMessage(message: MessageInput, agent: LLMAgent): Result<Unit> =
+        llm.prompt(message.text).map { reply ->
+            messagesDao.insert(message)
+            messagesDao.insert(MessageInput(reply, agent.data))
+        }
 }
