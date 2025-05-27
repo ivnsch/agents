@@ -37,7 +37,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,12 +55,10 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 
 @Composable
 fun Chat(viewModel: ChatViewModel) {
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
 
     val messages by viewModel.messages
@@ -87,10 +84,7 @@ fun Chat(viewModel: ChatViewModel) {
             isWaitingForReply = isWaitingForReply
         )
         UserInput(sendMessage = { message ->
-            scope.launch {
-                viewModel.sendMessage(message)
-                println("sent!")
-            }
+            viewModel.sendMessage(message)
         })
     }
 
