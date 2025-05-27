@@ -5,10 +5,15 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.AgentInput
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
-class DbAgentsDao(database: MyDatabase) : AgentsDao {
+class DbAgentsDao(
+    database: MyDatabase,
+    dispatcher: CoroutineDispatcher
+) : AgentsDao {
     private val agentQueries = database.agentQueries
 
     override val all: Flow<List<AgentData>> =
@@ -21,6 +26,7 @@ class DbAgentsDao(database: MyDatabase) : AgentsDao {
                     AgentData(id = it.id, name = it.name, isMe = it.is_me)
                 }
             }
+            .flowOn(dispatcher)
 
     override suspend fun insert(agent: AgentInput): AgentData {
         agentQueries.insert(agent.name, agent.isMe)

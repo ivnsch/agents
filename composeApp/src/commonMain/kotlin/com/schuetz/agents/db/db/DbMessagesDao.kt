@@ -6,16 +6,15 @@ import com.schuetz.agents.db.MessagesDao
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.Message
 import com.schuetz.agents.domain.MessageInput
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
-// TODO
-// should be Dispatchers.IO, but for some reason not working on KMP
-// https://github.com/Kotlin/kotlinx.coroutines/issues/3205#issuecomment-2906627080
-val dispatcher = Dispatchers.Default
-
-class DbMessagesDao(private val database: MyDatabase) : MessagesDao {
+class DbMessagesDao(
+    private val database: MyDatabase,
+    dispatcher: CoroutineDispatcher
+) : MessagesDao {
     override val all: Flow<List<Message>> =
         database.messageQueries
             .selectWithAuthor()
@@ -30,6 +29,7 @@ class DbMessagesDao(private val database: MyDatabase) : MessagesDao {
                     )
                 }
             }
+            .flowOn(dispatcher)
 
     override suspend fun insert(message: MessageInput) {
         database.messageQueries.insert(message.text, message.author.id)
