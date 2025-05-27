@@ -14,11 +14,14 @@ interface HuggingFaceClient {
     suspend fun completions(prompt: String): String
 }
 
-class HuggingFaceClientImpl(private val client: HttpClient) : HuggingFaceClient {
-    // TODO from UI
-    private val authToken = ""
-
+class HuggingFaceClientImpl(
+    private val client: HttpClient,
+    private val tokenStore: HuggingFaceTokenStore
+) : HuggingFaceClient {
     override suspend fun completions(prompt: String): String {
+        // TODO error handling
+        val authToken = tokenStore.token.value ?: ""
+
         val response = client.post("https://router.huggingface.co/cerebras/v1/chat/completions") {
             headers {
                 append(HttpHeaders.Authorization, "Bearer $authToken")

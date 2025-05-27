@@ -16,15 +16,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
 fun AddAgentDialog(
-    onAddAgent: (String) -> Unit,
+    onAddAgent: (AddAgentInputs) -> Unit,
     onDismiss: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
+    var authToken by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -37,12 +39,20 @@ fun AddAgentDialog(
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                Text(text = "Huggingface LLM", fontWeight = Bold)
                 Text(text = "Agent name:")
                 TextField(
                     value = name,
                     onValueChange = { name = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+                Text(text = "API key:")
+                TextField(
+                    value = authToken,
+                    onValueChange = { authToken = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -56,7 +66,7 @@ fun AddAgentDialog(
                     }
                     TextButton(
                         onClick = {
-                            onAddAgent(name)
+                            onAddAgent(AddAgentInputs(name, authToken))
                             onDismiss()
                         },
                         enabled = name.isNotBlank()

@@ -23,6 +23,7 @@ import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.http.HttpClientFactory
 import com.schuetz.agents.huggingface.HuggingFaceClient
 import com.schuetz.agents.huggingface.HuggingFaceClientImpl
+import com.schuetz.agents.huggingface.HuggingFaceTokenStore
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -41,7 +42,9 @@ val sharedModule = module {
     single<DatabaseFactory> { DatabaseFactoryImpl(get()) }
 
     single { HttpClientFactory.create(get()) }
-    single<HuggingFaceClient> { HuggingFaceClientImpl(get()) }
+
+    single { HuggingFaceTokenStore() }
+    single<HuggingFaceClient> { HuggingFaceClientImpl(get(), get()) }
 
     viewModelOf(::ChatViewModel)
     viewModelOf(::AgentsViewModel)
