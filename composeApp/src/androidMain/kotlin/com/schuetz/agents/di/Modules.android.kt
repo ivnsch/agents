@@ -1,7 +1,7 @@
 package com.schuetz.agents.di
 
-import com.schuetz.agents.AndroidDataStoreFactory
-import com.schuetz.agents.DataStoreFactory
+import com.schuetz.agents.AndroidPrefsFactory
+import com.schuetz.agents.PrefsFactory
 import com.schuetz.agents.db.AndroidDriverFactory
 import com.schuetz.agents.db.db.DriverFactory
 import io.ktor.client.engine.HttpClientEngine
@@ -14,6 +14,5 @@ actual val platformModule: Module
     get() = module {
         single<DriverFactory> { AndroidDriverFactory(androidApplication()) }
         single<HttpClientEngine> { OkHttp.create() }
-        single<DataStoreFactory> { AndroidDataStoreFactory(androidApplication()) }
+        single<PrefsFactory> { AndroidPrefsFactory(androidApplication()) }
     }
-

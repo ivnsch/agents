@@ -57,6 +57,27 @@ kotlin {
 
     sourceSets {
         val desktopMain by getting
+        val androidMain by getting
+        val commonMain by getting
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+
+        val nonWebMain by creating {
+            dependsOn(commonMain)
+        }
+        val nativeMain by creating {
+            dependsOn(nonWebMain)
+        }
+        val iosMain by creating {
+            dependsOn(nativeMain)
+        }
+        androidMain.dependsOn(nonWebMain)
+        desktopMain.dependsOn(nonWebMain)
+        nativeMain.dependsOn(nonWebMain)
+        iosX64Main.dependsOn(iosMain)
+        iosArm64Main.dependsOn(iosMain)
+        iosSimulatorArm64Main.dependsOn(iosMain)
 
         androidMain.dependencies {
             implementation(compose.preview)
@@ -86,8 +107,6 @@ kotlin {
             implementation(libs.ktor.client.logging)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
-            implementation(libs.data.store)
-            implementation(libs.data.store.preferences)
         }
 
         commonTest.dependencies {
@@ -105,6 +124,11 @@ kotlin {
         }
         wasmJsMain.dependencies {
             implementation(libs.ktor.js)
+        }
+
+        nonWebMain.dependencies {
+            implementation(libs.data.store)
+            implementation(libs.data.store.preferences)
         }
     }
 }

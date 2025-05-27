@@ -1,5 +1,7 @@
 package com.schuetz.agents.di
 
+import com.schuetz.agents.PrefsFactory
+import com.schuetz.agents.WebPrefsFactory
 import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.db.DataSeeder
 import com.schuetz.agents.db.MessagesDao
@@ -20,4 +22,5 @@ actual val platformModule: Module
         single<DataSeeder> { MemDataSeeder() }
         single<DriverFactory> { WebDriverFactory() }
         single<HttpClientEngine> { JsClient().create() }
+        single<PrefsFactory> { WebPrefsFactory() }
     }

@@ -2,6 +2,7 @@ package com.schuetz.agents.di
 
 import com.schuetz.agents.InitAppService
 import com.schuetz.agents.InitAppServiceImpl
+import com.schuetz.agents.PrefsFactory
 import com.schuetz.agents.agents.AgentsRepo
 import com.schuetz.agents.agents.AgentsRepoImpl
 import com.schuetz.agents.agents.AgentsViewModel
@@ -27,7 +28,6 @@ import com.schuetz.agents.huggingface.HuggingFaceClient
 import com.schuetz.agents.huggingface.HuggingFaceClientImpl
 import com.schuetz.agents.huggingface.HuggingFaceTokenStore
 import com.schuetz.agents.prefs.Prefs
-import com.schuetz.agents.prefs.PrefsImpl
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
 import org.koin.core.module.dsl.viewModelOf
@@ -52,7 +52,7 @@ val sharedModule = module {
 
     single<InitAppService> { InitAppServiceImpl(get()) }
 
-    single<Prefs> { PrefsImpl(get()) }
+    single<Prefs> { get<PrefsFactory>().createPrefs() }
 
     viewModelOf(::ChatViewModel)
     viewModelOf(::AgentsViewModel)
