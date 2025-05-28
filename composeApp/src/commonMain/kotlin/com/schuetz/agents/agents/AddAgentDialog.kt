@@ -32,6 +32,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
+import com.schuetz.agents.spaces.AddAgentInputs
 
 @Composable
 fun AddAgentDialog(
@@ -82,7 +83,8 @@ fun AddAgentDialog(
                     }
                     TextButton(
                         onClick = {
-                            onAddAgent(AddAgentInputs(name, authToken, avatarUrl))
+                            // TODO provider selection
+                            onAddAgent(AddAgentInputs(name, "huggingface", authToken, avatarUrl))
                             onDismiss()
                         },
                         enabled = name.isNotBlank()

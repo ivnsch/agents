@@ -1,4 +1,4 @@
-package com.schuetz.agents.agents
+package com.schuetz.agents.spaces
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -24,11 +24,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
-import com.schuetz.agents.domain.AgentData
+import com.schuetz.agents.agents.AddAgentDialog
+import com.schuetz.agents.domain.SpaceData
 
 @Composable
-fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
-    val agents by viewModel.otherAgents
+fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
+    val agents by viewModel.spaces
         .collectAsState(initial = emptyList())
 
     val showAddAgentDialog = remember { mutableStateOf(false) }
@@ -48,14 +49,14 @@ fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AsyncImage(
-                        model = item.avatarUrl,
+                        model = item.agent.avatarUrl,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp)
                     )
                     Text(
                         modifier = Modifier
                             .padding(horizontal = 16.dp, vertical = 40.dp)
-                            .clickable { onAgentSelected(item) },
+                            .clickable { onSpaceSelected(item) },
                         text = item.name
                     )
                 }
@@ -69,7 +70,7 @@ fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
         AddAgentDialog(
             avatarUrl = avatarUrl,
             onAddAgent = {
-                viewModel.addAgent(it)
+                viewModel.addSpaceWithAgent(it)
                 showAddAgentDialog.value = false
             },
             onDismiss = {

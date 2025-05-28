@@ -23,15 +23,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.schuetz.agents.NavConversions.toAgentData
 import com.schuetz.agents.NavConversions.toChatNav
-import com.schuetz.agents.agents.Agents
-import com.schuetz.agents.agents.AgentsViewModel
+import com.schuetz.agents.NavConversions.toSpace
 import com.schuetz.agents.chat.Chat
 import com.schuetz.agents.chat.ChatViewModel
-import com.schuetz.agents.domain.AgentData
-import com.schuetz.agents.domain.LLM
-import com.schuetz.agents.domain.LLMAgent
+import com.schuetz.agents.domain.SpaceData
+import com.schuetz.agents.spaces.Spaces
+import com.schuetz.agents.spaces.SpacesViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -62,7 +60,7 @@ fun App() {
                 composable<ChatNav> { backStackEntry ->
                     val args = backStackEntry.toRoute<ChatNav>()
                     setTitle(titleState, "Chat with ${args.name}")
-                    ChatNavScreen(args.toAgentData())
+                    ChatNavScreen(args.toSpace())
                 }
             }
         }
@@ -109,18 +107,16 @@ fun TopBar(navController: NavHostController, title: String) {
 
 @Composable
 fun AgentsScreen(navController: NavHostController) {
-    val viewModel = koinViewModel<AgentsViewModel>()
-    return Agents(viewModel, onAgentSelected = { agent ->
-        navController.navigate(route = toChatNav(agent))
+    val viewModel = koinViewModel<SpacesViewModel>()
+    return Spaces(viewModel, onSpaceSelected = { space ->
+        navController.navigate(route = toChatNav(space))
     })
 }
 
 @Composable
-fun ChatNavScreen(agent: AgentData) {
-    val llm = koinInject<LLM>()
-
+fun ChatNavScreen(space: SpaceData) {
     val viewModel = koinViewModel<ChatViewModel>(parameters = {
-        parametersOf(LLMAgent(agent, llm))
+        parametersOf(space)
     })
     Chat(viewModel)
 }

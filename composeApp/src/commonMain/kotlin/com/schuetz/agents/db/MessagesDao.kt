@@ -5,6 +5,6 @@ import com.schuetz.agents.domain.MessageInput
 import kotlinx.coroutines.flow.Flow
 
 interface MessagesDao {
-    val all: Flow<List<Message>>
+    suspend fun messages(spaceId: Long): Flow<List<Message>>
     suspend fun insert(message: MessageInput)
 }

@@ -5,6 +5,8 @@ import app.cash.sqldelight.coroutines.mapToList
 import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.db.multipleMeAgentsError
 import com.schuetz.agents.db.noMeAgentError
+import com.schuetz.agents.domain.AgentConnectionData
+import com.schuetz.agents.domain.AgentConnectionData.None.toConnectionData
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.AgentInput
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,7 +31,8 @@ class DbAgentsDao(
                         id = it.id,
                         name = it.name,
                         isMe = it.is_me,
-                        avatarUrl = it.avatar_url
+                        avatarUrl = it.avatar_url,
+                        connectionData = toConnectionData(it.provider, it.api_key)
                     )
                 }
             }
@@ -48,7 +51,8 @@ class DbAgentsDao(
                                 id = it.id,
                                 name = it.name,
                                 isMe = it.is_me,
-                                avatarUrl = it.avatar_url
+                                avatarUrl = it.avatar_url,
+                                connectionData = AgentConnectionData.None
                             )
                         }
                     }
@@ -59,17 +63,17 @@ class DbAgentsDao(
             }
 
     override suspend fun insert(agent: AgentInput): AgentData {
-        agentQueries.insert(agent.name, agent.isMe, agent.avatarUrl)
+        agentQueries.insert(
+            agent.name,
+            agent.isMe,
+            agent.avatarUrl,
+            agent.connectionData.providerStr(),
+            agent.connectionData.apiKey()
+        )
         val id = agentQueries.lastInsertId().executeAsOne()
-        return AgentData(id, agent.name, agent.isMe, agent.avatarUrl)
+        return AgentData(id, agent.name, agent.isMe, agent.avatarUrl, agent.connectionData)
     }
 
     override suspend fun count(): Long =
         agentQueries.countAgents().executeAsOne()
-
-    override suspend fun getAll(): List<AgentData> {
-        return agentQueries.selectAll().executeAsList().map {
-            AgentData(id = it.id, name = it.name, isMe = it.is_me, avatarUrl = it.avatar_url)
-        }
-    }
 }

@@ -11,19 +11,16 @@ import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 
 interface HuggingFaceClient {
-    suspend fun completions(prompt: String): Result<String>
+    suspend fun completions(prompt: String, accessToken: String): Result<String>
 }
 
 class HuggingFaceClientImpl(
     private val client: HttpClient,
-    private val tokenStore: HuggingFaceTokenStore
 ) : HuggingFaceClient {
-    override suspend fun completions(prompt: String): Result<String> {
-        val authToken = tokenStore.token.value ?: return Result.failure(Exception("No token set"))
-
+    override suspend fun completions(prompt: String, accessToken: String): Result<String> {
         val response = client.post("https://router.huggingface.co/cerebras/v1/chat/completions") {
             headers {
-                append(HttpHeaders.Authorization, "Bearer $authToken")
+                append(HttpHeaders.Authorization, "Bearer $accessToken")
                 contentType(ContentType.Application.Json)
                 setBody(
                     CompletionsRequest(

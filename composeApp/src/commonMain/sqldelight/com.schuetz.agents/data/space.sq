@@ -1,0 +1,25 @@
+CREATE TABLE space (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  agent INTEGER NOT NULL
+);
+
+insert:
+INSERT INTO space(name, agent) VALUES (?, ?);
+
+deleteAll:
+DELETE FROM space;
+
+selectAll:
+SELECT space.id, space.name,
+agent.id AS agent_id,
+agent.name AS agent_name,
+agent.is_me AS agent_is_me,
+agent.avatar_url AS agent_avatar_url,
+agent.provider AS agent_provider,
+agent.api_key AS agent_api_key
+FROM space
+JOIN agent ON space.agent = agent.id;
+
+lastInsertId:
+SELECT last_insert_rowid();

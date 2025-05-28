@@ -2,23 +2,30 @@ CREATE TABLE message (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   text TEXT NOT NULL,
   author INTEGER NOT NULL,
+  space INTEGER NOT NULL,
   FOREIGN KEY(author) REFERENCES agent(id)
 );
 
 selectAll:
-SELECT id, text, author FROM message;
+SELECT id, text, author, space FROM message;
 
 insert:
-INSERT INTO message(text, author) VALUES (?,?);
+INSERT INTO message(text, author, space) VALUES (?,?, ?);
 
 deleteAll:
 DELETE FROM message;
 
-selectWithAuthor:
+selectWithSpace:
 SELECT message.id, message.text,
 agent.id AS author_id,
 agent.name AS author_name,
 agent.is_me AS author_is_me,
-agent.avatar_url AS author_avatar_url
+agent.avatar_url AS author_avatar_url,
+agent.provider AS author_provider,
+agent.api_key AS author_api_key,
+space.id AS space_id,
+space.name AS space_name
 FROM message
-JOIN agent ON message.author = agent.id;
+JOIN agent ON message.author = agent.id
+JOIN space ON message.space = space.id
+WHERE space.id = ?;

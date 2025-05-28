@@ -1,5 +1,6 @@
 package com.schuetz.agents.domain
 
 interface LLM {
-    suspend fun prompt(message: String): Result<String>
+    // TODO review design: api key should be an implementation detail for LLMs that require one
+    suspend fun prompt(message: String, apiKey: String?): Result<String>
 }

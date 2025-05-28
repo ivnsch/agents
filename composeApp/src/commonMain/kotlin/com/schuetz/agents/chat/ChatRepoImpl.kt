@@ -2,7 +2,6 @@ package com.schuetz.agents.chat
 
 import com.schuetz.agents.db.MessagesDao
 import com.schuetz.agents.domain.LLM
-import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.Message
 import com.schuetz.agents.domain.MessageInput
 import kotlinx.coroutines.CoroutineDispatcher
@@ -14,13 +13,14 @@ class ChatRepoImpl(
     private val llm: LLM,
     private val dispatcher: CoroutineDispatcher
 ) : ChatRepo {
-    override val messages: Flow<List<Message>> = messagesDao.all
+    override suspend fun messages(spaceId: Long): Flow<List<Message>> =
+        messagesDao.messages(spaceId)
 
-    override suspend fun sendMessage(message: MessageInput, agent: LLMAgent): Result<Unit> =
-        llm.prompt(message.text).map { reply ->
+    override suspend fun sendMessage(message: MessageInput): Result<Unit> =
+        llm.prompt(message.text, message.space.agent.connectionData.apiKey()).map { reply ->
             withContext(dispatcher) {
                 messagesDao.insert(message)
-                messagesDao.insert(MessageInput(reply, agent.data))
+                messagesDao.insert(MessageInput(reply, message.space.agent, message.space))
             }
         }
 }
