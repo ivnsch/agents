@@ -1,25 +1,28 @@
 package com.schuetz.agents.db.mem
 
 import com.schuetz.agents.db.AgentsDao
-import com.schuetz.agents.db.DataSeeder
+import com.schuetz.agents.db.multipleMeAgentsError
+import com.schuetz.agents.db.noMeAgentError
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.AgentInput
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
-class MemAgentsDao(seeder: DataSeeder) : AgentsDao {
+class MemAgentsDao : AgentsDao {
     private val agents = MutableStateFlow<List<AgentData>>(emptyList())
 
-    init {
-        CoroutineScope(Dispatchers.Default).launch {
-            val seed = seeder.seed()
-            agents.value = listOf(seed.agents.me, seed.agents.dummy)
-        }
-    }
+    override val me: Flow<AgentData> =
+        agents
+            .map { agents -> agents.filter { it.isMe } }
+            .map { list ->
+                when (list.size) {
+                    1 -> list.first()
+                    0 -> noMeAgentError()
+                    else -> multipleMeAgentsError()
+                }
+            }
 
     override val all: Flow<List<AgentData>> = agents
 

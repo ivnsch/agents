@@ -12,6 +12,7 @@ class AgentsRepoImpl(
     private val dispatcher: CoroutineDispatcher
 ) : AgentsRepo {
     override val agents: Flow<List<AgentData>> = agentsDao.all
+    override val me: Flow<AgentData> = agentsDao.me
 
     override suspend fun addAgent(agent: AgentInput) {
         withContext(dispatcher) {

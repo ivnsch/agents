@@ -10,6 +10,9 @@ CREATE TABLE agent (
 selectAll:
 SELECT id, name, is_me, avatar_url FROM agent;
 
+selectMe:
+SELECT id, name, is_me, avatar_url FROM agent WHERE is_me = 1;
+
 insert:
 INSERT INTO agent(name, is_me, avatar_url) VALUES (?, ?, ?);
 

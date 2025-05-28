@@ -7,6 +7,8 @@ import kotlinx.coroutines.flow.map
 
 interface AgentsRepo {
     val agents: Flow<List<AgentData>>
+    val me: Flow<AgentData>
+
     val otherAgents: Flow<List<AgentData>>
         get() = agents.map { agents -> agents.filter { !it.isMe } }
 

@@ -3,6 +3,8 @@ package com.schuetz.agents.db.db
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.schuetz.agents.db.AgentsDao
+import com.schuetz.agents.db.multipleMeAgentsError
+import com.schuetz.agents.db.noMeAgentError
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.AgentInput
 import kotlinx.coroutines.CoroutineDispatcher
@@ -32,6 +34,29 @@ class DbAgentsDao(
                 }
             }
             .flowOn(dispatcher)
+
+    override val me: Flow<AgentData> =
+        agentQueries
+            .selectMe()
+            .asFlow()
+            .mapToList(dispatcher)
+            .map { list ->
+                when (list.size) {
+                    1 -> {
+                        list.first().let {
+                            AgentData(
+                                id = it.id,
+                                name = it.name,
+                                isMe = it.is_me,
+                                avatarUrl = it.avatar_url
+                            )
+                        }
+                    }
+
+                    0 -> noMeAgentError()
+                    else -> multipleMeAgentsError()
+                }
+            }
 
     override suspend fun insert(agent: AgentInput): AgentData {
         agentQueries.insert(agent.name, agent.isMe, agent.avatarUrl)
