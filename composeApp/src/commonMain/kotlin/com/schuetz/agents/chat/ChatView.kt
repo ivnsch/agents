@@ -238,7 +238,8 @@ private fun MyMessageBubble(message: String) =
     MessageBubble(
         message = message,
         shape = MyMessageBubbleShape,
-        arrangement = Arrangement.End
+        arrangement = Arrangement.End,
+        color = MaterialTheme.colorScheme.primary
     )
 
 @Composable
@@ -246,21 +247,23 @@ private fun OtherMessageBubble(message: String) =
     MessageBubble(
         message = message,
         shape = OtherMessageBubbleShape,
-        arrangement = Arrangement.Start
+        arrangement = Arrangement.Start,
+        color = MaterialTheme.colorScheme.secondary
     )
 
 @Composable
 private fun MessageBubble(
     message: String,
     shape: Shape,
-    arrangement: Arrangement.Horizontal
+    arrangement: Arrangement.Horizontal,
+    color: Color,
 ) {
     Row(
         horizontalArrangement = arrangement,
         modifier = Modifier.fillMaxWidth()
     ) {
         Surface(
-            color = MaterialTheme.colorScheme.primary,
+            color = color,
             shape = shape,
             modifier = Modifier.padding(16.dp)
         ) {
