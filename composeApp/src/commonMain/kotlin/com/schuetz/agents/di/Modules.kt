@@ -1,5 +1,6 @@
 package com.schuetz.agents.di
 
+import com.schuetz.agents.AvatarUrlGenerator
 import com.schuetz.agents.InitAppService
 import com.schuetz.agents.InitAppServiceImpl
 import com.schuetz.agents.PrefsFactory
@@ -19,6 +20,7 @@ import com.schuetz.agents.db.db.MyDatabaseImpl
 import com.schuetz.agents.db.mem.MemAgentsDao
 import com.schuetz.agents.db.mem.MemDataSeeder
 import com.schuetz.agents.db.mem.MemMessagesDao
+import com.schuetz.agents.dicebear.DiceBearClientImpl
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.HuggingFaceLLM
 import com.schuetz.agents.domain.LLM
@@ -60,6 +62,8 @@ val sharedModule = module {
     single<InitAppService> { InitAppServiceImpl(get()) }
 
     single<Prefs> { get<PrefsFactory>().createPrefs() }
+
+    single<AvatarUrlGenerator> { DiceBearClientImpl() }
 
     viewModelOf(::ChatViewModel)
     viewModelOf(::AgentsViewModel)

@@ -50,12 +50,15 @@ fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
     }
 
     if (showAddAgentDialog.value) {
-        AddAgentDialog(onAddAgent = {
-            viewModel.addAgent(it)
-            showAddAgentDialog.value = false
-        }, onDismiss = {
-            showAddAgentDialog.value = false
-        })
+        AddAgentDialog(
+            avatarUrl = viewModel.avatarUrl,
+            onAddAgent = {
+                viewModel.addAgent(it)
+                showAddAgentDialog.value = false
+            },
+            onDismiss = {
+                showAddAgentDialog.value = false
+            })
     }
 }
 
