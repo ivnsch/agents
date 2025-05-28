@@ -33,6 +33,8 @@ fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
 
     val showAddAgentDialog = remember { mutableStateOf(false) }
 
+    val avatarUrl by viewModel.newAgentavatarUrl.collectAsState()
+
     Scaffold(
         floatingActionButton = {
             AddButton(onClick = {
@@ -65,14 +67,18 @@ fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
 
     if (showAddAgentDialog.value) {
         AddAgentDialog(
-            avatarUrl = viewModel.avatarUrl,
+            avatarUrl = avatarUrl,
             onAddAgent = {
                 viewModel.addAgent(it)
                 showAddAgentDialog.value = false
             },
             onDismiss = {
                 showAddAgentDialog.value = false
-            })
+            },
+            regenerateAvatar = {
+                viewModel.regenerateAvatarUrl()
+            }
+        )
     }
 }
 
