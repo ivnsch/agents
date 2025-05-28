@@ -24,28 +24,26 @@ data class ChatNav(
 )
 
 object NavConversions {
-    fun toChatNav(space: SpaceData) =
-        ChatNav(
-            space.agent.id,
-            space.agent.name,
-            space.agent.isMe,
-            space.agent.avatarUrl,
-            space.id,
-            space.name,
-            space.agent.connectionData.providerStr(),
-            space.agent.connectionData.apiKey()
-        )
+    fun toChatNav(space: SpaceData) = ChatNav(
+        space.agent.id,
+        space.agent.name,
+        space.agent.isMe,
+        space.agent.avatarUrl,
+        space.id,
+        space.name,
+        space.agent.connectionData.providerStr(),
+        space.agent.connectionData.apiKey()
+    )
 
-    fun ChatNav.toSpace() =
-        SpaceData(
-            this.spaceId,
-            this.spaceName,
-            AgentData(
-                this.id,
-                this.name,
-                this.isMe,
-                this.avatarUrl,
-                toConnectionData(this.agentProvider, this.agentApiKey)
-            )
+    fun ChatNav.toSpace() = SpaceData(
+        this.spaceId,
+        this.spaceName,
+        AgentData(
+            this.id,
+            this.name,
+            this.isMe,
+            this.avatarUrl,
+            toConnectionData(this.agentProvider, this.agentApiKey)
         )
+    )
 }
