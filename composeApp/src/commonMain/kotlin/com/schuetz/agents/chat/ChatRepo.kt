@@ -1,6 +1,5 @@
 package com.schuetz.agents.chat
 
-import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.Message
 import com.schuetz.agents.domain.MessageInput
 import kotlinx.coroutines.flow.Flow
@@ -8,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface ChatRepo {
     suspend fun messages(spaceId: Long): Flow<List<Message>>
 
-    suspend fun sendMessage(message: MessageInput, agent: LLMAgent): Result<Unit>
+    suspend fun sendMessage(message: MessageInput): Result<Unit>
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.schuetz.agents.agents.AgentsRepo
 import com.schuetz.agents.domain.AgentData
-import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.Message
 import com.schuetz.agents.domain.MessageInput
 import com.schuetz.agents.domain.SpaceData
@@ -16,7 +15,6 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel(
     private val chatRepo: ChatRepo,
-    private val agent: LLMAgent,
     private val agentRepo: AgentsRepo,
     private val space: SpaceData
 ) : ViewModel() {
@@ -50,7 +48,7 @@ class ChatViewModel(
     }
 
     private suspend fun sendMessage(message: String, me: AgentData) {
-        chatRepo.sendMessage(MessageInput(message, me, space), agent).onFailure { error ->
+        chatRepo.sendMessage(MessageInput(message, me, space)).onFailure { error ->
             _errorMessage.emit(error.message ?: "Unknown error")
         }
     }

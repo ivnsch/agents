@@ -1,5 +1,6 @@
 package com.schuetz.agents
 
+import com.schuetz.agents.domain.AgentConnectionData.None.toConnectionData
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.SpaceData
 import kotlinx.serialization.Serializable
@@ -17,7 +18,9 @@ data class ChatNav(
     val isMe: Boolean,
     val avatarUrl: String,
     val spaceId: Long,
-    val spaceName: String
+    val spaceName: String,
+    val agentProvider: String,
+    val agentApiKey: String?
 )
 
 object NavConversions {
@@ -28,14 +31,21 @@ object NavConversions {
             space.agent.isMe,
             space.agent.avatarUrl,
             space.id,
-            space.name
+            space.name,
+            space.agent.connectionData.providerStr(),
+            space.agent.connectionData.apiKey()
         )
 
     fun ChatNav.toSpace() =
         SpaceData(
             this.spaceId,
             this.spaceName,
-            AgentData(this.id, this.name, this.isMe, this.avatarUrl)
+            AgentData(
+                this.id,
+                this.name,
+                this.isMe,
+                this.avatarUrl,
+                toConnectionData(this.agentProvider, this.agentApiKey)
+            )
         )
 }
-

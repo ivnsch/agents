@@ -31,10 +31,11 @@ class MemAgentsDao : AgentsDao {
             id = agents.value.size.toLong(),
             name = agent.name,
             isMe = agent.isMe,
-            avatarUrl = agent.avatarUrl
+            avatarUrl = agent.avatarUrl,
+            connectionData = agent.connectionData
         )
         agents.update { it + data }
-        return AgentData(data.id, data.name, data.isMe, data.avatarUrl)
+        return AgentData(data.id, data.name, data.isMe, data.avatarUrl, data.connectionData)
     }
 
     override suspend fun count(): Long = agents.value.size.toLong()

@@ -1,21 +1,19 @@
 package com.schuetz.agents
 
 import com.schuetz.agents.db.AgentsDao
+import com.schuetz.agents.domain.AgentConnectionData
 import com.schuetz.agents.domain.AgentInput
-import com.schuetz.agents.huggingface.HuggingFaceTokenStore
 
 interface InitAppService {
     suspend fun init()
 }
 
 class InitAppServiceImpl(
-    private val huggingFaceTokenStore: HuggingFaceTokenStore,
     private val agentsDao: AgentsDao,
     private val avatarUrlGenerator: AvatarUrlGenerator
 ) : InitAppService {
     override suspend fun init() {
         insertMyAgentIfNotExists()
-        huggingFaceTokenStore.initialize()
     }
 
     // Inserts the agent representing "me" if not in db yet (running for the first time)
@@ -25,7 +23,8 @@ class InitAppServiceImpl(
                 AgentInput(
                     name = "me",
                     isMe = true,
-                    avatarUrl = avatarUrlGenerator.generateRandomAvatarUrl()
+                    avatarUrl = avatarUrlGenerator.generateRandomAvatarUrl(),
+                    connectionData = AgentConnectionData.None
                 )
             )
         }

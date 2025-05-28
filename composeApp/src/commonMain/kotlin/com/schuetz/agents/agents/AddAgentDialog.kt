@@ -83,7 +83,8 @@ fun AddAgentDialog(
                     }
                     TextButton(
                         onClick = {
-                            onAddAgent(AddAgentInputs(name, authToken, avatarUrl))
+                            // TODO provider selection
+                            onAddAgent(AddAgentInputs(name, "huggingface", authToken, avatarUrl))
                             onDismiss()
                         },
                         enabled = name.isNotBlank()

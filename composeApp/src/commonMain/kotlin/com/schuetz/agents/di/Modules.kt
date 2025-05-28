@@ -9,7 +9,6 @@ import com.schuetz.agents.agents.AgentsRepoImpl
 import com.schuetz.agents.chat.ChatRepo
 import com.schuetz.agents.chat.ChatRepoImpl
 import com.schuetz.agents.chat.ChatViewModel
-import com.schuetz.agents.spaces.SpacesViewModel
 import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.db.MessagesDao
 import com.schuetz.agents.db.SpacesDao
@@ -23,15 +22,14 @@ import com.schuetz.agents.db.db.MyDatabaseImpl
 import com.schuetz.agents.dicebear.DiceBearClientImpl
 import com.schuetz.agents.domain.HuggingFaceLLM
 import com.schuetz.agents.domain.LLM
-import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.http.HttpClientFactory
 import com.schuetz.agents.huggingface.HuggingFaceClient
 import com.schuetz.agents.huggingface.HuggingFaceClientImpl
-import com.schuetz.agents.huggingface.HuggingFaceTokenStore
 import com.schuetz.agents.prefs.Prefs
 import com.schuetz.agents.spaces.SpacesRepo
 import com.schuetz.agents.spaces.SpacesRepoImpl
+import com.schuetz.agents.spaces.SpacesViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.Module
@@ -61,10 +59,9 @@ val sharedModule = module {
 
     single { HttpClientFactory.create(get()) }
 
-    single { HuggingFaceTokenStore(get(), get()) }
-    single<HuggingFaceClient> { HuggingFaceClientImpl(get(), get()) }
+    single<HuggingFaceClient> { HuggingFaceClientImpl(get()) }
 
-    single<InitAppService> { InitAppServiceImpl(get(), get(), get()) }
+    single<InitAppService> { InitAppServiceImpl(get(), get()) }
 
     single<Prefs> { get<PrefsFactory>().createPrefs() }
 
@@ -73,5 +70,5 @@ val sharedModule = module {
     viewModelOf(::ChatViewModel)
     viewModelOf(::SpacesViewModel)
 
-    viewModel { (agent: LLMAgent, space: SpaceData) -> ChatViewModel(get(), agent, get(), space) }
+    viewModel { (space: SpaceData) -> ChatViewModel(get(), get(), space) }
 }

@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.db.SpacesDao
+import com.schuetz.agents.domain.AgentConnectionData.None.toConnectionData
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.domain.SpaceInput
@@ -32,7 +33,8 @@ class DbSpacesDao(
                         it.agent_id,
                         it.agent_name,
                         it.agent_is_me,
-                        it.agent_avatar_url
+                        it.agent_avatar_url,
+                        toConnectionData(it.agent_provider, it.agent_api_key)
                     )
                 )
             }

@@ -3,6 +3,7 @@ package com.schuetz.agents.db.db
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import com.schuetz.agents.db.MessagesDao
+import com.schuetz.agents.domain.AgentConnectionData.None.toConnectionData
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.Message
 import com.schuetz.agents.domain.MessageInput
@@ -29,6 +30,7 @@ class DbMessagesDao(
                         name = it.author_name,
                         isMe = it.author_is_me,
                         avatarUrl = it.author_avatar_url,
+                        connectionData = toConnectionData(it.author_provider, it.author_api_key)
                     )
                     Message(
                         it.id,

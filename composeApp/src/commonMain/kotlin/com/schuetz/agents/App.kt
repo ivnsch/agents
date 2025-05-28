@@ -27,8 +27,6 @@ import com.schuetz.agents.NavConversions.toChatNav
 import com.schuetz.agents.NavConversions.toSpace
 import com.schuetz.agents.chat.Chat
 import com.schuetz.agents.chat.ChatViewModel
-import com.schuetz.agents.domain.LLM
-import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.spaces.Spaces
 import com.schuetz.agents.spaces.SpacesViewModel
@@ -117,10 +115,8 @@ fun AgentsScreen(navController: NavHostController) {
 
 @Composable
 fun ChatNavScreen(space: SpaceData) {
-    val llm = koinInject<LLM>()
-
     val viewModel = koinViewModel<ChatViewModel>(parameters = {
-        parametersOf(LLMAgent(space.agent, llm), space)
+        parametersOf(space)
     })
     Chat(viewModel)
 }
