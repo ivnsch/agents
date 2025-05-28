@@ -3,14 +3,15 @@ import kotlin.Boolean;
 CREATE TABLE agent (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
-  is_me INTEGER AS Boolean NOT NULL
+  is_me INTEGER AS Boolean NOT NULL,
+  avatar_url Text NOT NULL
 );
 
 selectAll:
-SELECT id, name, is_me FROM agent;
+SELECT id, name, is_me, avatar_url FROM agent;
 
 insert:
-INSERT INTO agent(name, is_me) VALUES (?, ?);
+INSERT INTO agent(name, is_me, avatar_url) VALUES (?, ?, ?);
 
 deleteAll:
 DELETE FROM agent;

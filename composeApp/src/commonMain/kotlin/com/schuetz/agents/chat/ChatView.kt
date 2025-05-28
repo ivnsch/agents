@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -42,6 +43,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -49,6 +51,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.schuetz.agents.common.ErrorDialog
 import com.schuetz.agents.domain.Message
 import kotlinx.coroutines.currentCoroutineContext
@@ -189,9 +192,16 @@ private fun MessageList(
         }
         items(items = messages) { item ->
             if (item.author.isMe) {
-                MessageBubble(message = item.text)
+                MyMessageBubble(message = item.text)
             } else {
-                OtherMessageView(item.text)
+                Row {
+                    AsyncImage(
+                        model = item.author.avatarUrl,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp)
+                    )
+                    OtherMessageBubble(item.text)
+                }
             }
             MessageSpacer()
         }
@@ -211,38 +221,62 @@ private fun ThinkingBubble() {
             }
         }
     }
-    OtherMessageView(dots)
+    OtherMessageView(dots, null)
 }
 
 @Composable
 private fun MessageSpacer() = Spacer(modifier = Modifier.height(4.dp))
 
 @Composable
-private fun OtherMessageView(message: String) = MessageView(
+private fun OtherMessageView(message: String, avatarUrl: String?) = MessageView(
     message = message,
-    modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp)
+    modifier = Modifier.padding(16.dp, 0.dp, 0.dp, 0.dp),
 )
 
 @Composable
-private fun MessageBubble(message: String) {
+private fun MyMessageBubble(message: String) =
+    MessageBubble(
+        message = message,
+        shape = MyMessageBubbleShape,
+        arrangement = Arrangement.End,
+        color = MaterialTheme.colorScheme.primary
+    )
+
+@Composable
+private fun OtherMessageBubble(message: String) =
+    MessageBubble(
+        message = message,
+        shape = OtherMessageBubbleShape,
+        arrangement = Arrangement.Start,
+        color = MaterialTheme.colorScheme.secondary
+    )
+
+@Composable
+private fun MessageBubble(
+    message: String,
+    shape: Shape,
+    arrangement: Arrangement.Horizontal,
+    color: Color,
+) {
     Row(
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = arrangement,
         modifier = Modifier.fillMaxWidth()
     ) {
         Surface(
-            color = MaterialTheme.colorScheme.primary,
-            shape = MessageBubbleShape,
+            color = color,
+            shape = shape,
             modifier = Modifier.padding(16.dp)
         ) {
             MessageView(
                 message = message,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(16.dp),
             )
         }
     }
 }
 
-private val MessageBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
+private val MyMessageBubbleShape = RoundedCornerShape(20.dp, 4.dp, 20.dp, 20.dp)
+private val OtherMessageBubbleShape = RoundedCornerShape(4.dp, 20.dp, 20.dp, 20.dp)
 
 @Composable
 private fun MessageView(modifier: Modifier, message: String) {
@@ -252,8 +286,10 @@ private fun MessageView(modifier: Modifier, message: String) {
     )
 
     CompositionLocalProvider(LocalTextSelectionColors provides selectionColors) {
-        SelectionContainer {
-            Text(text = message, modifier = modifier)
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            SelectionContainer {
+                Text(text = message, modifier = modifier)
+            }
         }
     }
 }

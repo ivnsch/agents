@@ -24,9 +24,14 @@ class MemAgentsDao(seeder: DataSeeder) : AgentsDao {
     override val all: Flow<List<AgentData>> = agents
 
     override suspend fun insert(agent: AgentInput): AgentData {
-        val data = AgentData(id = agents.value.size.toLong(), name = agent.name, isMe = agent.isMe)
+        val data = AgentData(
+            id = agents.value.size.toLong(),
+            name = agent.name,
+            isMe = agent.isMe,
+            avatarUrl = agent.avatarUrl
+        )
         agents.update { it + data }
-        return AgentData(data.id, data.name, data.isMe)
+        return AgentData(data.id, data.name, data.isMe, data.avatarUrl)
     }
 
     override suspend fun count(): Long = agents.value.size.toLong()

@@ -19,7 +19,7 @@ actual val platformModule: Module
     get() = module {
         single<MessagesDao> { MemMessagesDao() }
         single<AgentsDao> { MemAgentsDao(get()) }
-        single<DataSeeder> { MemDataSeeder() }
+        single<DataSeeder> { MemDataSeeder(get()) }
         single<DriverFactory> { WebDriverFactory() }
         single<HttpClientEngine> { JsClient().create() }
         single<PrefsFactory> { WebPrefsFactory() }

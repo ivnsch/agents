@@ -1,10 +1,12 @@
 package com.schuetz.agents.agents
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -18,8 +20,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import com.schuetz.agents.domain.AgentData
 
 @Composable
@@ -28,6 +32,8 @@ fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
         .collectAsState(initial = emptyList())
 
     val showAddAgentDialog = remember { mutableStateOf(false) }
+
+    val avatarUrl by viewModel.newAgentavatarUrl.collectAsState()
 
     Scaffold(
         floatingActionButton = {
@@ -38,24 +44,41 @@ fun Agents(viewModel: AgentsViewModel, onAgentSelected: (AgentData) -> Unit) {
     ) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(agents) { item ->
-                Text(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp, vertical = 40.dp)
-                        .clickable { onAgentSelected(item) },
-                    text = item.name
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    AsyncImage(
+                        model = item.avatarUrl,
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp)
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp, vertical = 40.dp)
+                            .clickable { onAgentSelected(item) },
+                        text = item.name
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(4.dp))
             }
         }
     }
 
     if (showAddAgentDialog.value) {
-        AddAgentDialog(onAddAgent = {
-            viewModel.addAgent(it)
-            showAddAgentDialog.value = false
-        }, onDismiss = {
-            showAddAgentDialog.value = false
-        })
+        AddAgentDialog(
+            avatarUrl = avatarUrl,
+            onAddAgent = {
+                viewModel.addAgent(it)
+                showAddAgentDialog.value = false
+            },
+            onDismiss = {
+                showAddAgentDialog.value = false
+            },
+            regenerateAvatar = {
+                viewModel.regenerateAvatarUrl()
+            }
+        )
     }
 }
 
