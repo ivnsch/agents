@@ -1,6 +1,7 @@
 package com.schuetz.agents
 
 import com.schuetz.agents.domain.AgentData
+import com.schuetz.agents.domain.SpaceData
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -10,9 +11,31 @@ object AgentsNav
 // nested objects appear not to work (even if AgentData is Serializable)
 // https://stackoverflow.com/a/79075718/930450
 // so storing the fields and converting to/from AgentData
-data class ChatNav(val id: Long, val name: String, val isMe: Boolean, val avatarUrl: String)
+data class ChatNav(
+    val id: Long,
+    val name: String,
+    val isMe: Boolean,
+    val avatarUrl: String,
+    val spaceId: Long,
+    val spaceName: String
+)
 
 object NavConversions {
-    fun toChatNav(agent: AgentData) = ChatNav(agent.id, agent.name, agent.isMe, agent.avatarUrl)
-    fun ChatNav.toAgentData() = AgentData(this.id, this.name, this.isMe, this.avatarUrl)
+    fun toChatNav(space: SpaceData) =
+        ChatNav(
+            space.agent.id,
+            space.agent.name,
+            space.agent.isMe,
+            space.agent.avatarUrl,
+            space.id,
+            space.name
+        )
+
+    fun ChatNav.toSpace() =
+        SpaceData(
+            this.spaceId,
+            this.spaceName,
+            AgentData(this.id, this.name, this.isMe, this.avatarUrl)
+        )
 }
+

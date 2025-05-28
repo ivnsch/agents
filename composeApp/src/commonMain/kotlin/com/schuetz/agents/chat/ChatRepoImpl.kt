@@ -14,13 +14,18 @@ class ChatRepoImpl(
     private val llm: LLM,
     private val dispatcher: CoroutineDispatcher
 ) : ChatRepo {
-    override val messages: Flow<List<Message>> = messagesDao.all
+    override suspend fun messages(spaceId: Long): Flow<List<Message>> =
+        messagesDao.messages(spaceId)
 
-    override suspend fun sendMessage(message: MessageInput, agent: LLMAgent): Result<Unit> =
+    override suspend fun sendMessage(
+        message: MessageInput,
+        // TODO clearer name, maybe receiver?
+        agent: LLMAgent,
+    ): Result<Unit> =
         llm.prompt(message.text).map { reply ->
             withContext(dispatcher) {
                 messagesDao.insert(message)
-                messagesDao.insert(MessageInput(reply, agent.data))
+                messagesDao.insert(MessageInput(reply, agent.data, message.space))
             }
         }
 }
