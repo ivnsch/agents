@@ -39,6 +39,4 @@ class MemAgentsDao : AgentsDao {
     }
 
     override suspend fun count(): Long = agents.value.size.toLong()
-
-    override suspend fun getAll(): List<AgentData> = agents.value
 }

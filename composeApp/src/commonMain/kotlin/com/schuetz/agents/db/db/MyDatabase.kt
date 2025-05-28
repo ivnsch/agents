@@ -1,6 +1,5 @@
 package com.schuetz.agents.db.db
 
-import app.cash.sqldelight.TransactionWithReturn
 import com.schuetz.agents.Database
 import comschuetzagents.data.AgentQueries
 import comschuetzagents.data.MessageQueries
@@ -10,8 +9,6 @@ interface MyDatabase {
     val messageQueries: MessageQueries
     val agentQueries: AgentQueries
     val spaceQueries: SpaceQueries
-
-    fun <T> transactionWithResult(bodyWithReturn: TransactionWithReturn<T>.() -> T): T
 }
 
 class MyDatabaseImpl(databaseFactory: DatabaseFactory) : MyDatabase {
@@ -20,9 +17,4 @@ class MyDatabaseImpl(databaseFactory: DatabaseFactory) : MyDatabase {
     override val messageQueries = database.messageQueries
     override val agentQueries = database.agentQueries
     override val spaceQueries = database.spaceQueries
-
-    override fun <T> transactionWithResult(bodyWithReturn: TransactionWithReturn<T>.() -> T): T =
-        database.transactionWithResult(false) {
-            bodyWithReturn()
-        }
 }

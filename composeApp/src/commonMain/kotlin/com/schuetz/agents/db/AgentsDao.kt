@@ -10,9 +10,6 @@ interface AgentsDao {
 
     suspend fun insert(agent: AgentInput): AgentData
     suspend fun count(): Long
-
-    // TODO remove
-    suspend fun getAll(): List<AgentData>
 }
 
 fun noMeAgentError(): Nothing =

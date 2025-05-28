@@ -76,16 +76,4 @@ class DbAgentsDao(
 
     override suspend fun count(): Long =
         agentQueries.countAgents().executeAsOne()
-
-    override suspend fun getAll(): List<AgentData> {
-        return agentQueries.selectAll().executeAsList().map {
-            AgentData(
-                id = it.id,
-                name = it.name,
-                isMe = it.is_me,
-                avatarUrl = it.avatar_url,
-                connectionData = toConnectionData(it.provider, it.api_key)
-            )
-        }
-    }
 }
