@@ -6,6 +6,7 @@ import com.schuetz.agents.db.AgentsDao
 import com.schuetz.agents.db.multipleMeAgentsError
 import com.schuetz.agents.db.noMeAgentError
 import com.schuetz.agents.domain.AgentConnectionData
+import com.schuetz.agents.domain.AgentConnectionData.None.toConnectionData
 import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.AgentInput
 import kotlinx.coroutines.CoroutineDispatcher
@@ -86,14 +87,5 @@ class DbAgentsDao(
                 connectionData = toConnectionData(it.provider, it.api_key)
             )
         }
-    }
-}
-
-private fun toConnectionData(provider: String, apiKey: String?): AgentConnectionData {
-    return when (provider) {
-        "huggingface" -> apiKey?.let { AgentConnectionData.HuggingFace(it) }
-            ?: throw IllegalArgumentException("Missing API key for $provider")
-
-        else -> throw IllegalArgumentException("Unknown provider: $provider")
     }
 }
