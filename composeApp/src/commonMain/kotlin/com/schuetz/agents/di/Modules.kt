@@ -49,7 +49,7 @@ val sharedModule = module {
     single<AgentsRepo> { AgentsRepoImpl(get(), get()) }
     single<MessagesDao> { MemMessagesDao() }
     single<AgentsDao> { MemAgentsDao(get()) }
-    single<DataSeeder> { MemDataSeeder() }
+    single<DataSeeder> { MemDataSeeder(get()) }
     single<LLM> { HuggingFaceLLM(get()) }
     single<MyDatabase> { MyDatabaseImpl(get()) }
     single<DatabaseFactory> { DatabaseFactoryImpl(get()) }

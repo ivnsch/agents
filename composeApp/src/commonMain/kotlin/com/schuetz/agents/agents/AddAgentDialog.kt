@@ -81,7 +81,7 @@ fun AddAgentDialog(
                     }
                     TextButton(
                         onClick = {
-                            onAddAgent(AddAgentInputs(name, authToken))
+                            onAddAgent(AddAgentInputs(name, authToken, avatarUrl))
                             onDismiss()
                         },
                         enabled = name.isNotBlank()

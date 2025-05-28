@@ -25,7 +25,12 @@ class DbMessagesDao(
                     Message(
                         it.id,
                         it.text,
-                        AgentData(id = it.author_id, name = it.author_name, isMe = it.author_is_me)
+                        AgentData(
+                            id = it.author_id,
+                            name = it.author_name,
+                            isMe = it.author_is_me,
+                            avatarUrl = it.author_avatar_url
+                        )
                     )
                 }
             }

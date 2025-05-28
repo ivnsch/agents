@@ -18,6 +18,7 @@ selectWithAuthor:
 SELECT message.id, message.text,
 agent.id AS author_id,
 agent.name AS author_name,
-agent.is_me AS author_is_me
+agent.is_me AS author_is_me,
+agent.avatar_url AS author_avatar_url
 FROM message
 JOIN agent ON message.author = agent.id;

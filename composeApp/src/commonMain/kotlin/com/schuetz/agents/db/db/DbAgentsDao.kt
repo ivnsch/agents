@@ -23,15 +23,20 @@ class DbAgentsDao(
             .mapToList(dispatcher)
             .map { agents ->
                 agents.map {
-                    AgentData(id = it.id, name = it.name, isMe = it.is_me)
+                    AgentData(
+                        id = it.id,
+                        name = it.name,
+                        isMe = it.is_me,
+                        avatarUrl = it.avatar_url
+                    )
                 }
             }
             .flowOn(dispatcher)
 
     override suspend fun insert(agent: AgentInput): AgentData {
-        agentQueries.insert(agent.name, agent.isMe)
+        agentQueries.insert(agent.name, agent.isMe, agent.avatarUrl)
         val id = agentQueries.lastInsertId().executeAsOne()
-        return AgentData(id, agent.name, agent.isMe)
+        return AgentData(id, agent.name, agent.isMe, agent.avatarUrl)
     }
 
     override suspend fun count(): Long =
@@ -39,7 +44,7 @@ class DbAgentsDao(
 
     override suspend fun getAll(): List<AgentData> {
         return agentQueries.selectAll().executeAsList().map {
-            AgentData(id = it.id, name = it.name, isMe = it.is_me)
+            AgentData(id = it.id, name = it.name, isMe = it.is_me, avatarUrl = it.avatar_url)
         }
     }
 }

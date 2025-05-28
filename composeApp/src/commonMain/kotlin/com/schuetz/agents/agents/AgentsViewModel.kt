@@ -20,10 +20,10 @@ class AgentsViewModel(
 
     fun addAgent(inputs: AddAgentInputs) {
         viewModelScope.launch {
-            agentsRepo.addAgent(AgentInput(inputs.name, isMe = false))
+            agentsRepo.addAgent(AgentInput(inputs.name, isMe = false, avatarUrl))
             huggingFaceTokenStore.update(inputs.authToken)
         }
     }
 }
 
-data class AddAgentInputs(val name: String, val authToken: String)
+data class AddAgentInputs(val name: String, val authToken: String, val avatarUrl: String)
