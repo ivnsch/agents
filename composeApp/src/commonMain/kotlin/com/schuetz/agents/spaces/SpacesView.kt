@@ -65,8 +65,8 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
                         .padding(8.dp)
                         .clip(RoundedCornerShape(roundedCorners))
                         .border(1.dp, Color.Gray, RoundedCornerShape(roundedCorners))
+                        .clickable(onClick = { onSpaceSelected(item) })
                         .padding(8.dp)
-                        .clickable { onSpaceSelected(item) }
                 ) {
                     AsyncImage(
                         model = item.agent.avatarUrl,
