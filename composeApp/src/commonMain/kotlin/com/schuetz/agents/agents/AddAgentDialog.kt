@@ -36,8 +36,10 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
 import com.schuetz.agents.domain.ConnectableProvider
@@ -70,16 +72,24 @@ fun AddAgentDialog(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(text = "Huggingface LLM", fontWeight = Bold)
+                Text(
+                    text = "Add agent",
+                    fontWeight = Bold,
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp)
+                )
                 AvatarImageBox(avatarUrl, regenerateAvatar)
-                Text(text = "Agent name:")
+                Text(text = "Name:")
                 TextField(
                     value = name,
                     onValueChange = { name = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
-                Text(text = "Agent tagline:")
+                Text(text = "Tagline:")
                 TextField(
                     value = description ?: "",
                     onValueChange = { description = it },
