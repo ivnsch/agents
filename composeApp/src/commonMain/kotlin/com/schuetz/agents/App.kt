@@ -122,7 +122,11 @@ fun AgentsScreen(navController: NavHostController) {
 @Composable
 fun ChatNavScreen(space: SpaceData) {
     val llm = when (space.agent.connectionData) {
-        is AgentConnectionData.HuggingFace -> HuggingFaceLLM(koinInject<HuggingFaceClient>())
+        is AgentConnectionData.HuggingFace -> HuggingFaceLLM(
+            koinInject<HuggingFaceClient>(),
+            space.agent.connectionData.accessToken
+        )
+
         is AgentConnectionData.Dummy -> DummyLLM()
         // if there's no connection data, it means we're trying to chat with a non-connectable agent
         // (this is currently "me"), which is an error state

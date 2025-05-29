@@ -2,9 +2,10 @@ package com.schuetz.agents.domain
 
 import com.schuetz.agents.huggingface.HuggingFaceClient
 
-class HuggingFaceLLM(private val client: HuggingFaceClient) : LLM {
-    override suspend fun prompt(message: String, apiKey: String?): Result<String> =
-        apiKey?.let {
-            client.completions(message, apiKey)
-        } ?: Result.failure(Exception("No api key provided for hugging face provider"))
+class HuggingFaceLLM(
+    private val client: HuggingFaceClient,
+    private val apiKey: String
+) : LLM {
+    override suspend fun prompt(message: String): Result<String> =
+        client.completions(message, apiKey)
 }

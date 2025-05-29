@@ -18,7 +18,7 @@ class ChatRepoImpl(
 
     override suspend fun sendMessage(message: MessageInput): Result<Unit> {
         addMessage(message)
-        return llm.prompt(message.text, message.space.agent.connectionData.apiKey()).map { reply ->
+        return llm.prompt(message.text).map { reply ->
             addMessage(MessageInput(reply, message.space.agent, message.space))
         }
     }

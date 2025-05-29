@@ -20,7 +20,6 @@ import com.schuetz.agents.db.db.DbSpacesDao
 import com.schuetz.agents.db.db.MyDatabase
 import com.schuetz.agents.db.db.MyDatabaseImpl
 import com.schuetz.agents.dicebear.DiceBearClientImpl
-import com.schuetz.agents.domain.HuggingFaceLLM
 import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.http.HttpClientFactory
@@ -54,7 +53,6 @@ val sharedModule = module {
     single<SpacesDao> { DbSpacesDao(get(), get(), get()) }
     single<AgentsDao> { DbAgentsDao(get(), get()) }
 
-    single<LLM> { HuggingFaceLLM(get()) }
     single<MyDatabase> { MyDatabaseImpl(get()) }
     single<DatabaseFactory> { DatabaseFactoryImpl(get()) }
 
