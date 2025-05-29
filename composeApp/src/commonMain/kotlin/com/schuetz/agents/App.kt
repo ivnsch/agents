@@ -26,8 +26,14 @@ import androidx.navigation.toRoute
 import com.schuetz.agents.NavConversions.toChatNav
 import com.schuetz.agents.NavConversions.toSpace
 import com.schuetz.agents.chat.Chat
+import com.schuetz.agents.chat.ChatRepo
 import com.schuetz.agents.chat.ChatViewModel
+import com.schuetz.agents.domain.AgentConnectionData
+import com.schuetz.agents.domain.DummyLLM
+import com.schuetz.agents.domain.ErrorLLM
+import com.schuetz.agents.domain.HuggingFaceLLM
 import com.schuetz.agents.domain.SpaceData
+import com.schuetz.agents.huggingface.HuggingFaceClient
 import com.schuetz.agents.spaces.Spaces
 import com.schuetz.agents.spaces.SpacesViewModel
 import kotlinx.coroutines.Dispatchers
@@ -115,8 +121,22 @@ fun AgentsScreen(navController: NavHostController) {
 
 @Composable
 fun ChatNavScreen(space: SpaceData) {
+    val llm = when (space.agent.connectionData) {
+        is AgentConnectionData.HuggingFace -> HuggingFaceLLM(koinInject<HuggingFaceClient>())
+        is AgentConnectionData.Dummy -> DummyLLM()
+        // if there's no connection data, it means we're trying to chat with a non-connectable agent
+        // (this is currently "me"), which is an error state
+        // normally this shouldn't happen. The user flow shouldn't allow it.
+        // it might be possible to improve design
+        // maybe by requiring Space to reference actually connectable agents
+        // or we could manage something more lenient like an echo llm for non-connectables
+        AgentConnectionData.None -> ErrorLLM()
+    }
+
+    val chatRepo = koinInject<ChatRepo> { parametersOf(llm) }
+
     val viewModel = koinViewModel<ChatViewModel>(parameters = {
-        parametersOf(space)
+        parametersOf(chatRepo, space)
     })
     Chat(viewModel)
 }

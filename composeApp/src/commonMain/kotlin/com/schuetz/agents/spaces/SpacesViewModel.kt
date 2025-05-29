@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.schuetz.agents.AvatarUrlGenerator
 import com.schuetz.agents.domain.AgentConnectionData.None.toConnectionData
 import com.schuetz.agents.domain.AgentInput
+import com.schuetz.agents.domain.ConnectableProvider
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.domain.SpaceInput
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +51,7 @@ class SpacesViewModel(
 data class AddSpaceInputs(val name: String, val agent: AddAgentInputs)
 data class AddAgentInputs(
     val name: String,
-    val provider: String,
+    val provider: ConnectableProvider,
     val apiKey: String?,
     val avatarUrl: String
 )

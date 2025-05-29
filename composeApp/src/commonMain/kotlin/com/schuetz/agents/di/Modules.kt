@@ -45,7 +45,8 @@ val sharedModule = module {
     // https://github.com/Kotlin/kotlinx.coroutines/issues/3205#issuecomment-2906627080
     single<CoroutineDispatcher> { Dispatchers.Default }
 
-    single<ChatRepo> { ChatRepoImpl(get(), get(), get()) }
+    factory<ChatRepo> { (llm: LLM) -> ChatRepoImpl(get(), llm, get()) }
+
     single<AgentsRepo> { AgentsRepoImpl(get(), get()) }
     single<SpacesRepo> { SpacesRepoImpl(get(), get()) }
 
@@ -67,8 +68,6 @@ val sharedModule = module {
 
     single<AvatarUrlGenerator> { DiceBearClientImpl() }
 
-    viewModelOf(::ChatViewModel)
     viewModelOf(::SpacesViewModel)
-
-    viewModel { (space: SpaceData) -> ChatViewModel(get(), get(), space) }
+    viewModel { (chatRepo: ChatRepo, space: SpaceData) -> ChatViewModel(chatRepo, get(), space) }
 }
