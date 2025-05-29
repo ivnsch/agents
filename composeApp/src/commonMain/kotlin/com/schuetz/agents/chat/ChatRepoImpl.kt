@@ -16,11 +16,16 @@ class ChatRepoImpl(
     override suspend fun messages(spaceId: Long): Flow<List<Message>> =
         messagesDao.messages(spaceId)
 
-    override suspend fun sendMessage(message: MessageInput): Result<Unit> =
-        llm.prompt(message.text, message.space.agent.connectionData.apiKey()).map { reply ->
-            withContext(dispatcher) {
-                messagesDao.insert(message)
-                messagesDao.insert(MessageInput(reply, message.space.agent, message.space))
-            }
+    override suspend fun sendMessage(message: MessageInput): Result<Unit> {
+        addMessage(message)
+        return llm.prompt(message.text, message.space.agent.connectionData.apiKey()).map { reply ->
+            addMessage(MessageInput(reply, message.space.agent, message.space))
         }
+    }
+
+    private suspend fun addMessage(message: MessageInput) {
+        withContext(dispatcher) {
+            messagesDao.insert(message)
+        }
+    }
 }
