@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.schuetz.agents.agents.AddAgentDialog
+import com.schuetz.agents.common.ErrorDialog
 import com.schuetz.agents.domain.SpaceData
 
 @Composable
@@ -38,6 +40,9 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
 
     val avatarUrl by viewModel.newAgentavatarUrl.collectAsState()
 
+    val errorMessage = viewModel.errorMessage
+        .collectAsState(initial = null)
+
     Scaffold(
         floatingActionButton = {
             AddButton(onClick = {
@@ -48,7 +53,11 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(agents) { item ->
                 Row(
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                        .clickable {
+                            onSpaceSelected(item)
+                        }
                 ) {
                     AsyncImage(
                         model = item.agent.avatarUrl,
@@ -60,11 +69,7 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
                             .padding(horizontal = 16.dp),
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(
-                            modifier = Modifier
-                                .clickable { onSpaceSelected(item) },
-                            text = item.name
-                        )
+                        Text(text = item.name)
                         item.agent.description?.takeIf { it.isNotBlank() }?.let { Text(it) }
                     }
                 }
@@ -88,6 +93,13 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
             regenerateAvatar = {
                 viewModel.regenerateAvatarUrl()
             }
+        )
+    }
+
+    errorMessage.value?.let { error ->
+        ErrorDialog(
+            message = error,
+            onDismiss = { viewModel.clearError() }
         )
     }
 }

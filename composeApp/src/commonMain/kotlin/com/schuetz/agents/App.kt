@@ -66,7 +66,13 @@ fun App() {
                 composable<ChatNav> { backStackEntry ->
                     val args = backStackEntry.toRoute<ChatNav>()
                     setTitle(titleState, "Chat with ${args.name}")
-                    ChatNavScreen(args.toSpace())
+                    val space = args.toSpace().getOrElse { error ->
+                        // TODO error dialog
+                        // note: can only happen due to programmatic error
+                        println("Error converting args to space: $error")
+                        return@composable
+                    }
+                    ChatNavScreen(space)
                 }
             }
         }

@@ -12,6 +12,8 @@ import com.schuetz.agents.huggingface.huggingFaceModelNames
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 
 class SpacesViewModel(
@@ -19,9 +21,13 @@ class SpacesViewModel(
     private val avatarUrlGenerator: AvatarUrlGenerator,
 ) : ViewModel() {
     val spaces: Flow<List<SpaceData>> = spacesRepo.spaces
+        .catch { _errorMessage.value = it.toString() }
 
     private val _newAgentavatarUrl = MutableStateFlow(avatarUrlGenerator.generateRandomAvatarUrl())
     val newAgentavatarUrl: StateFlow<String> = _newAgentavatarUrl
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asSharedFlow()
 
     // When the user adds an agent, add automatically a space
     fun addSpaceWithAgent(inputs: AddAgentInputs) {
@@ -30,6 +36,15 @@ class SpacesViewModel(
 
     private fun addSpace(inputs: AddSpaceInputs) {
         viewModelScope.launch {
+            val connectionData = toConnectionData(
+                inputs.agent.provider,
+                inputs.agent.model,
+                inputs.agent.apiKey,
+            ).getOrElse {
+                _errorMessage.emit(it.toString())
+                return@launch
+            }
+
             spacesRepo.addSpace(
                 SpaceInput(
                     inputs.name,
@@ -38,11 +53,7 @@ class SpacesViewModel(
                         inputs.agent.description,
                         isMe = false,
                         _newAgentavatarUrl.value,
-                        toConnectionData(
-                            inputs.agent.provider,
-                            inputs.agent.model,
-                            inputs.agent.apiKey,
-                        )
+                        connectionData
                     )
                 )
             )
@@ -56,6 +67,10 @@ class SpacesViewModel(
     fun llmModels(): List<String> =
         // TODO generalize
         huggingFaceModelNames
+
+    fun clearError() {
+        _errorMessage.value = null
+    }
 }
 
 data class AddSpaceInputs(val name: String, val agent: AddAgentInputs)

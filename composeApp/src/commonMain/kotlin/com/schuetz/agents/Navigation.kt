@@ -39,16 +39,20 @@ object NavConversions {
         space.agent.connectionData.apiKey()
     )
 
-    fun ChatNav.toSpace() = SpaceData(
-        this.spaceId,
-        this.spaceName,
-        AgentData(
-            this.id,
-            this.name,
-            this.description,
-            this.isMe,
-            this.avatarUrl,
-            toConnectionData(this.agentProvider, this.agentModel, this.agentApiKey)
-        )
-    )
+    fun ChatNav.toSpace(): Result<SpaceData> =
+        toConnectionData(this.agentProvider, this.agentModel, this.agentApiKey)
+            .map { connectionData ->
+                SpaceData(
+                    id = this.spaceId,
+                    name = this.spaceName,
+                    agent = AgentData(
+                        id = this.id,
+                        name = this.name,
+                        description = this.description,
+                        isMe = this.isMe,
+                        avatarUrl = this.avatarUrl,
+                        connectionData = connectionData
+                    )
+                )
+            }
 }

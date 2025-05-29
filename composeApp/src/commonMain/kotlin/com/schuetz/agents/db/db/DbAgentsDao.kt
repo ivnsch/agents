@@ -27,13 +27,19 @@ class DbAgentsDao(
             .mapToList(dispatcher)
             .map { agents ->
                 agents.map {
+                    val connectionData =
+                        toConnectionData(
+                            it.provider,
+                            it.model,
+                            it.api_key
+                        ).getOrElse { error -> throw error }
                     AgentData(
                         id = it.id,
                         name = it.name,
                         description = it.description,
                         isMe = it.is_me,
                         avatarUrl = it.avatar_url,
-                        connectionData = toConnectionData(it.provider, it.model, it.api_key)
+                        connectionData = connectionData
                     )
                 }
             }

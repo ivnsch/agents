@@ -25,17 +25,19 @@ class DbMessagesDao(
             .mapToList(dispatcher)
             .map { messages ->
                 messages.map {
+                    val connectionData =
+                        toConnectionData(
+                            it.author_provider,
+                            it.author_model,
+                            it.author_api_key
+                        ).getOrElse { e -> throw e }
                     val agent = AgentData(
                         id = it.author_id,
                         name = it.author_name,
                         description = it.author_description,
                         isMe = it.author_is_me,
                         avatarUrl = it.author_avatar_url,
-                        connectionData = toConnectionData(
-                            it.author_provider,
-                            it.author_model,
-                            it.author_api_key
-                        )
+                        connectionData = connectionData
                     )
                     Message(
                         it.id,

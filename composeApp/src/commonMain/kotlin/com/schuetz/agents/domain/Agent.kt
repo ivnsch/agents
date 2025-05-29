@@ -52,27 +52,24 @@ sealed interface AgentConnectionData {
         provider: String,
         model: String?,
         apiKey: String?
-    ): AgentConnectionData =
+    ): Result<AgentConnectionData> = runCatching {
         when (provider) {
-            HUGGING_FACE_STR -> {
-                HuggingFace(
-                    model
-                        ?: throw IllegalArgumentException("Missing model for Hugging Face provider"),
-                    apiKey
-                        ?: throw IllegalArgumentException("Missing api key for Hugging Face provider")
-                )
-            }
+            HUGGING_FACE_STR -> HuggingFace(
+                model ?: error("Missing model for Hugging Face provider"),
+                apiKey ?: error("Missing api key for Hugging Face provider")
+            )
 
             DUMMY_STR -> Dummy
             NONE_STR -> None
-            else -> throw IllegalArgumentException("Unknown provider: $provider")
+            else -> error("Unknown provider: $provider")
         }
+    }
 
     fun toConnectionData(
         provider: ConnectableProvider,
         model: String?,
         apiKey: String?
-    ): AgentConnectionData =
+    ): Result<AgentConnectionData> =
         toConnectionData(toProviderString(provider), model, apiKey)
 
     fun toProviderString(connectableProvider: ConnectableProvider) = when (connectableProvider) {

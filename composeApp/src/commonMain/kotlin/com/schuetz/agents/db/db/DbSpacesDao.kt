@@ -26,6 +26,12 @@ class DbSpacesDao(
         .mapToList(dispatcher)
         .map { spaces ->
             spaces.map {
+                val connectionData =
+                    toConnectionData(
+                        it.agent_provider,
+                        it.agent_model,
+                        it.agent_api_key
+                    ).getOrElse { e -> throw e }
                 SpaceData(
                     it.id,
                     it.name,
@@ -35,7 +41,7 @@ class DbSpacesDao(
                         it.agent_description,
                         it.agent_is_me,
                         it.agent_avatar_url,
-                        toConnectionData(it.agent_provider, it.agent_model, it.agent_api_key)
+                        connectionData
                     )
                 )
             }

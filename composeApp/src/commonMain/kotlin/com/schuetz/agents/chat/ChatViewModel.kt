@@ -29,9 +29,11 @@ class ChatViewModel(
 
     init {
         viewModelScope.launch {
-            chatRepo.messages(space.id).collect { list ->
-                _messages.value = list
-            }
+            chatRepo.messages(space.id)
+                .catch { _errorMessage.value = it.toString() }
+                .collect { list ->
+                    _messages.value = list
+                }
         }
     }
 
