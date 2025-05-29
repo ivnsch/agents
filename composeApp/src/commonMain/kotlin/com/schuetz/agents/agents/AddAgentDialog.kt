@@ -52,8 +52,8 @@ fun AddAgentDialog(
     regenerateAvatar: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var authToken by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf<String?>(null) }
+    var authToken by remember { mutableStateOf<String?>(null) }
     var model by remember { mutableStateOf(llmModels.firstOrNull() ?: "") }
     var llm by remember { mutableStateOf(ConnectableProvider.HUGGING_FACE) }
 
@@ -81,7 +81,7 @@ fun AddAgentDialog(
                 )
                 Text(text = "Agent tagline:")
                 TextField(
-                    value = description,
+                    value = description ?: "",
                     onValueChange = { description = it },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
@@ -100,7 +100,7 @@ fun AddAgentDialog(
                         Text(text = ":")
                     }
                     TextField(
-                        value = authToken,
+                        value = authToken ?: "",
                         onValueChange = { authToken = it },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
