@@ -71,10 +71,10 @@ data class CompletionsChoice(val message: Message)
 //
 // TODO ideally use a REST interface that works with hugging face model names
 private val cerebrasModelNames = listOf(
-    "llama-4-scout-17b-16e-instruct",
     "llama3.1-8b",
-    "llama-3.3-70b",
     "qwen-3-32b",
+    "llama-4-scout-17b-16e-instruct",
+    "llama-3.3-70b",
 )
 
 // for now hardcoded to cerebras provider
