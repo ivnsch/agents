@@ -19,6 +19,7 @@ selectWithSpace:
 SELECT message.id, message.text,
 agent.id AS author_id,
 agent.name AS author_name,
+agent.description AS author_description,
 agent.is_me AS author_is_me,
 agent.avatar_url AS author_avatar_url,
 agent.provider AS author_provider,

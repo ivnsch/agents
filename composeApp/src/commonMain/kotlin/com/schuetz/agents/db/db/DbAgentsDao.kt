@@ -30,6 +30,7 @@ class DbAgentsDao(
                     AgentData(
                         id = it.id,
                         name = it.name,
+                        description = it.description,
                         isMe = it.is_me,
                         avatarUrl = it.avatar_url,
                         connectionData = toConnectionData(it.provider, it.model, it.api_key)
@@ -50,6 +51,7 @@ class DbAgentsDao(
                             AgentData(
                                 id = it.id,
                                 name = it.name,
+                                description = it.description,
                                 isMe = it.is_me,
                                 avatarUrl = it.avatar_url,
                                 connectionData = AgentConnectionData.None
@@ -65,6 +67,7 @@ class DbAgentsDao(
     override suspend fun insert(agent: AgentInput): AgentData {
         agentQueries.insert(
             agent.name,
+            agent.description,
             agent.isMe,
             agent.avatarUrl,
             agent.connectionData.providerStr(),
@@ -72,7 +75,14 @@ class DbAgentsDao(
             agent.connectionData.apiKey()
         )
         val id = agentQueries.lastInsertId().executeAsOne()
-        return AgentData(id, agent.name, agent.isMe, agent.avatarUrl, agent.connectionData)
+        return AgentData(
+            id,
+            agent.name,
+            agent.description,
+            agent.isMe,
+            agent.avatarUrl,
+            agent.connectionData
+        )
     }
 
     override suspend fun count(): Long =

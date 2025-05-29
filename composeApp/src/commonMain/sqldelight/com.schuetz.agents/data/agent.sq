@@ -3,6 +3,7 @@ import kotlin.Boolean;
 CREATE TABLE agent (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
+  description TEXT,
   is_me INTEGER AS Boolean NOT NULL,
   avatar_url Text NOT NULL,
   provider TEXT NOT NULL,
@@ -11,13 +12,13 @@ CREATE TABLE agent (
 );
 
 selectAll:
-SELECT id, name, is_me, avatar_url, provider, model, api_key FROM agent;
+SELECT id, name, description, is_me, avatar_url, provider, model, api_key FROM agent;
 
 selectMe:
-SELECT id, name, is_me, avatar_url FROM agent WHERE is_me = 1;
+SELECT id, name, description, is_me, avatar_url FROM agent WHERE is_me = 1;
 
 insert:
-INSERT INTO agent(name, is_me, avatar_url, provider, model, api_key) VALUES (?, ?, ?, ?, ?, ?);
+INSERT INTO agent(name, description, is_me, avatar_url, provider, model, api_key) VALUES (?, ?, ?, ?, ?, ?, ?);
 
 deleteAll:
 DELETE FROM agent;

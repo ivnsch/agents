@@ -15,6 +15,7 @@ object AgentsNav
 data class ChatNav(
     val id: Long,
     val name: String,
+    val description: String?,
     val isMe: Boolean,
     val avatarUrl: String,
     val spaceId: Long,
@@ -28,6 +29,7 @@ object NavConversions {
     fun toChatNav(space: SpaceData) = ChatNav(
         space.agent.id,
         space.agent.name,
+        space.agent.description,
         space.agent.isMe,
         space.agent.avatarUrl,
         space.id,
@@ -43,6 +45,7 @@ object NavConversions {
         AgentData(
             this.id,
             this.name,
+            this.description,
             this.isMe,
             this.avatarUrl,
             toConnectionData(this.agentProvider, this.agentModel, this.agentApiKey)

@@ -1,6 +1,8 @@
 package com.schuetz.agents.spaces
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,12 +55,18 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
                         contentDescription = null,
                         modifier = Modifier.size(64.dp)
                     )
-                    Text(
+                    Column(
                         modifier = Modifier
-                            .padding(horizontal = 16.dp, vertical = 40.dp)
-                            .clickable { onSpaceSelected(item) },
-                        text = item.name
-                    )
+                            .padding(horizontal = 16.dp),
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .clickable { onSpaceSelected(item) },
+                            text = item.name
+                        )
+                        item.agent.description?.takeIf { it.isNotBlank() }?.let { Text(it) }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(4.dp))

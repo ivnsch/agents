@@ -14,6 +14,7 @@ selectAll:
 SELECT space.id, space.name,
 agent.id AS agent_id,
 agent.name AS agent_name,
+agent.description AS agent_description,
 agent.is_me AS agent_is_me,
 agent.avatar_url AS agent_avatar_url,
 agent.provider AS agent_provider,

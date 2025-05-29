@@ -34,7 +34,11 @@ class SpacesViewModel(
                 SpaceInput(
                     inputs.name,
                     AgentInput(
-                        inputs.name, isMe = false, _newAgentavatarUrl.value, toConnectionData(
+                        inputs.name,
+                        inputs.agent.description,
+                        isMe = false,
+                        _newAgentavatarUrl.value,
+                        toConnectionData(
                             inputs.agent.provider,
                             inputs.agent.model,
                             inputs.agent.apiKey,
@@ -57,6 +61,7 @@ class SpacesViewModel(
 data class AddSpaceInputs(val name: String, val agent: AddAgentInputs)
 data class AddAgentInputs(
     val name: String,
+    val description: String?,
     val provider: ConnectableProvider,
     val model: String?,
     val apiKey: String?,

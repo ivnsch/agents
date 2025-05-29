@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class AgentData(
     val id: Long,
     val name: String,
+    val description: String?,
     val isMe: Boolean,
     val avatarUrl: String,
     val connectionData: AgentConnectionData
@@ -13,6 +14,7 @@ data class AgentData(
 
 data class AgentInput(
     val name: String,
+    val description: String?,
     val isMe: Boolean,
     val avatarUrl: String,
     val connectionData: AgentConnectionData

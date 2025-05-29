@@ -28,6 +28,7 @@ class DbMessagesDao(
                     val agent = AgentData(
                         id = it.author_id,
                         name = it.author_name,
+                        description = it.author_description,
                         isMe = it.author_is_me,
                         avatarUrl = it.author_avatar_url,
                         connectionData = toConnectionData(

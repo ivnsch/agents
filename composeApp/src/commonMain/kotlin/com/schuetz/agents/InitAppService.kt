@@ -22,6 +22,7 @@ class InitAppServiceImpl(
             agentsDao.insert(
                 AgentInput(
                     name = "me",
+                    description = null,
                     isMe = true,
                     avatarUrl = avatarUrlGenerator.generateRandomAvatarUrl(),
                     connectionData = AgentConnectionData.None

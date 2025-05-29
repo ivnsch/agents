@@ -30,12 +30,20 @@ class MemAgentsDao : AgentsDao {
         val data = AgentData(
             id = agents.value.size.toLong(),
             name = agent.name,
+            description = agent.description,
             isMe = agent.isMe,
             avatarUrl = agent.avatarUrl,
             connectionData = agent.connectionData
         )
         agents.update { it + data }
-        return AgentData(data.id, data.name, data.isMe, data.avatarUrl, data.connectionData)
+        return AgentData(
+            data.id,
+            data.name,
+            data.description,
+            data.isMe,
+            data.avatarUrl,
+            data.connectionData
+        )
     }
 
     override suspend fun count(): Long = agents.value.size.toLong()
