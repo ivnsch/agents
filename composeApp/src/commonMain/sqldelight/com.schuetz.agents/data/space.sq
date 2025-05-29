@@ -17,6 +17,7 @@ agent.name AS agent_name,
 agent.is_me AS agent_is_me,
 agent.avatar_url AS agent_avatar_url,
 agent.provider AS agent_provider,
+agent.model AS agent_model,
 agent.api_key AS agent_api_key
 FROM space
 JOIN agent ON space.agent = agent.id;

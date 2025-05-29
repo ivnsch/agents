@@ -124,6 +124,7 @@ fun ChatNavScreen(space: SpaceData) {
     val llm = when (space.agent.connectionData) {
         is AgentConnectionData.HuggingFace -> HuggingFaceLLM(
             koinInject<HuggingFaceClient>(),
+            space.agent.connectionData.model,
             space.agent.connectionData.accessToken
         )
 

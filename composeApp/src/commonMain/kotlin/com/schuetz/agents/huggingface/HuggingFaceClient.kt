@@ -11,13 +11,20 @@ import io.ktor.http.contentType
 import kotlinx.serialization.Serializable
 
 interface HuggingFaceClient {
-    suspend fun completions(prompt: String, accessToken: String): Result<String>
+    suspend fun completions(prompt: String, model: String, accessToken: String): Result<String>
 }
 
 class HuggingFaceClientImpl(
     private val client: HttpClient,
 ) : HuggingFaceClient {
-    override suspend fun completions(prompt: String, accessToken: String): Result<String> {
+    override suspend fun completions(
+        prompt: String,
+        model: String,
+        accessToken: String
+    ): Result<String> {
+        println("!!!! token: $accessToken")
+
+
         val response = client.post("https://router.huggingface.co/cerebras/v1/chat/completions") {
             headers {
                 append(HttpHeaders.Authorization, "Bearer $accessToken")
@@ -27,8 +34,7 @@ class HuggingFaceClientImpl(
                         messages = listOf(
                             Message(role = "user", content = prompt)
                         ),
-                        // hardcoding the model for now
-                        model = "qwen-3-32b"
+                        model = model
                     )
                 )
             }
@@ -53,3 +59,23 @@ data class CompletionsResponse(val choices: List<CompletionsChoice>)
 
 @Serializable
 data class CompletionsChoice(val message: Message)
+
+// NOTE that the hugging face model names (e.g. Qwen/Qwen3-32B instead of qwen-3-32b)
+// don't work here, we've to use Cerebras specific identifiers:
+// https://inference-docs.cerebras.ai/api-reference/chat-completions
+//
+// why does hugging face provide a different endpoint for "requests" client than
+// apparently when using huggingface_hub, which does accept the hugging face model names?
+// see https://huggingface.co/docs/inference-providers/en/providers/cerebras
+// (client "huggingface_hub" vs. client "requests")
+//
+// TODO ideally use a REST interface that works with hugging face model names
+private val cerebrasModelNames = listOf(
+    "llama-4-scout-17b-16e-instruct",
+    "llama3.1-8b",
+    "llama-3.3-70b",
+    "qwen-3-32b",
+)
+
+// for now hardcoded to cerebras provider
+val huggingFaceModelNames = cerebrasModelNames

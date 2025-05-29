@@ -34,7 +34,7 @@ class DbSpacesDao(
                         it.agent_name,
                         it.agent_is_me,
                         it.agent_avatar_url,
-                        toConnectionData(it.agent_provider, it.agent_api_key)
+                        toConnectionData(it.agent_provider, it.agent_model, it.agent_api_key)
                     )
                 )
             }

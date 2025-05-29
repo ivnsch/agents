@@ -30,7 +30,11 @@ class DbMessagesDao(
                         name = it.author_name,
                         isMe = it.author_is_me,
                         avatarUrl = it.author_avatar_url,
-                        connectionData = toConnectionData(it.author_provider, it.author_api_key)
+                        connectionData = toConnectionData(
+                            it.author_provider,
+                            it.author_model,
+                            it.author_api_key
+                        )
                     )
                     Message(
                         it.id,

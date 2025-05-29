@@ -32,7 +32,7 @@ class DbAgentsDao(
                         name = it.name,
                         isMe = it.is_me,
                         avatarUrl = it.avatar_url,
-                        connectionData = toConnectionData(it.provider, it.api_key)
+                        connectionData = toConnectionData(it.provider, it.model, it.api_key)
                     )
                 }
             }
@@ -68,6 +68,7 @@ class DbAgentsDao(
             agent.isMe,
             agent.avatarUrl,
             agent.connectionData.providerStr(),
+            agent.connectionData.modelStr(),
             agent.connectionData.apiKey()
         )
         val id = agentQueries.lastInsertId().executeAsOne()

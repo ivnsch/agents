@@ -41,12 +41,14 @@ import com.schuetz.agents.spaces.AddAgentInputs
 @Composable
 fun AddAgentDialog(
     avatarUrl: String,
+    llmModels: List<String>,
     onAddAgent: (AddAgentInputs) -> Unit,
     onDismiss: () -> Unit,
     regenerateAvatar: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var authToken by remember { mutableStateOf("") }
+    var model by remember { mutableStateOf(llmModels.firstOrNull() ?: "") }
     var llm by remember { mutableStateOf(ConnectableProvider.HUGGING_FACE) }
 
     Dialog(onDismissRequest = onDismiss) {
@@ -84,6 +86,15 @@ fun AddAgentDialog(
                         singleLine = true
                     )
                 }
+                if (hasModel(llm)) {
+                    Text(text = "Model:")
+                    LLMModelSelectionDropdown(
+                        models = llmModels,
+                        selectedModel = model,
+                        onModelChange = {
+                            model = it
+                        })
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -93,7 +104,7 @@ fun AddAgentDialog(
                     }
                     TextButton(
                         onClick = {
-                            onAddAgent(AddAgentInputs(name, llm, authToken, avatarUrl))
+                            onAddAgent(AddAgentInputs(name, llm, model, authToken, avatarUrl))
                             onDismiss()
                         },
                         enabled = name.isNotBlank()
@@ -143,10 +154,49 @@ private fun hasApiKey(llm: ConnectableProvider): Boolean = when (llm) {
     ConnectableProvider.DUMMY -> false
 }
 
+private fun hasModel(llm: ConnectableProvider): Boolean = when (llm) {
+    ConnectableProvider.HUGGING_FACE -> true
+    ConnectableProvider.DUMMY -> false
+}
+
 private fun toTextLabel(llm: ConnectableProvider): String = when (llm) {
     ConnectableProvider.HUGGING_FACE -> "Hugging Face"
     ConnectableProvider.DUMMY -> "Dummy"
 }
+
+@Composable
+fun LLMModelSelectionDropdown(
+    models: List<String>,
+    selectedModel: String,
+    onModelChange: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(selectedModel)
+        IconButton(onClick = { expanded = !expanded }) {
+            Icon(Icons.Default.MoreVert, contentDescription = "More options")
+        }
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            models.forEach { model ->
+                LLMModelDropdownItem(model, onClick = {
+                    onModelChange(it)
+                    expanded = false
+                })
+            }
+        }
+    }
+}
+
+@Composable
+private fun LLMModelDropdownItem(model: String, onClick: (String) -> Unit) =
+    DropdownMenuItem(
+        text = { Text(model) },
+        onClick = { onClick(model) }
+    )
+
 
 @Composable
 fun AvatarImageBox(avatarUrl: String, regenerateAvatar: () -> Unit) = Box(

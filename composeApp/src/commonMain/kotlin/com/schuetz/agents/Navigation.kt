@@ -20,6 +20,7 @@ data class ChatNav(
     val spaceId: Long,
     val spaceName: String,
     val agentProvider: String,
+    val agentModel: String?,
     val agentApiKey: String?
 )
 
@@ -32,6 +33,7 @@ object NavConversions {
         space.id,
         space.name,
         space.agent.connectionData.providerStr(),
+        space.agent.connectionData.modelStr(),
         space.agent.connectionData.apiKey()
     )
 
@@ -43,7 +45,7 @@ object NavConversions {
             this.name,
             this.isMe,
             this.avatarUrl,
-            toConnectionData(this.agentProvider, this.agentApiKey)
+            toConnectionData(this.agentProvider, this.agentModel, this.agentApiKey)
         )
     )
 }

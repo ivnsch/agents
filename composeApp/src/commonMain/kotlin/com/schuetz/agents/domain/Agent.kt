@@ -20,7 +20,7 @@ data class AgentInput(
 
 // TODO review, feels convoluted
 sealed interface AgentConnectionData {
-    data class HuggingFace(val accessToken: String) : AgentConnectionData
+    data class HuggingFace(val model: String, val accessToken: String) : AgentConnectionData
     data object Dummy : AgentConnectionData
     data object None : AgentConnectionData
 
@@ -36,23 +36,42 @@ sealed interface AgentConnectionData {
         is None -> NONE_STR
     }
 
+    fun modelStr(): String? = when (this) {
+        is HuggingFace -> model
+        is None, Dummy -> null
+    }
+
     fun apiKey(): String? = when (this) {
         is HuggingFace -> accessToken
         is None, Dummy -> null
     }
 
-    fun toConnectionData(provider: String, apiKey: String?): AgentConnectionData =
+    fun toConnectionData(
+        provider: String,
+        model: String?,
+        apiKey: String?
+    ): AgentConnectionData =
         when (provider) {
-            HUGGING_FACE_STR -> apiKey?.let { HuggingFace(apiKey) }
-                ?: throw IllegalArgumentException("Missing api key for Hugging Face provider")
+            HUGGING_FACE_STR -> {
+                HuggingFace(
+                    model
+                        ?: throw IllegalArgumentException("Missing model for Hugging Face provider"),
+                    apiKey
+                        ?: throw IllegalArgumentException("Missing api key for Hugging Face provider")
+                )
+            }
 
             DUMMY_STR -> Dummy
             NONE_STR -> None
             else -> throw IllegalArgumentException("Unknown provider: $provider")
         }
 
-    fun toConnectionData(provider: ConnectableProvider, apiKey: String?): AgentConnectionData =
-        toConnectionData(toProviderString(provider), apiKey)
+    fun toConnectionData(
+        provider: ConnectableProvider,
+        model: String?,
+        apiKey: String?
+    ): AgentConnectionData =
+        toConnectionData(toProviderString(provider), model, apiKey)
 
     fun toProviderString(connectableProvider: ConnectableProvider) = when (connectableProvider) {
         ConnectableProvider.HUGGING_FACE -> HUGGING_FACE_STR
@@ -63,4 +82,3 @@ sealed interface AgentConnectionData {
 enum class ConnectableProvider {
     HUGGING_FACE, DUMMY
 }
-
