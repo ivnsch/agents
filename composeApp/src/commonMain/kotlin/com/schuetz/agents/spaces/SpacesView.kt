@@ -1,5 +1,6 @@
 package com.schuetz.agents.spaces
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -25,6 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.schuetz.agents.agents.AddAgentDialog
@@ -43,6 +47,8 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
     val errorMessage = viewModel.errorMessage
         .collectAsState(initial = null)
 
+    val roundedCorners = 12.dp
+
     Scaffold(
         floatingActionButton = {
             AddButton(onClick = {
@@ -54,15 +60,20 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
             items(agents) { item ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                        .clickable {
-                            onSpaceSelected(item)
-                        }
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(roundedCorners))
+                        .border(1.dp, Color.Gray, RoundedCornerShape(roundedCorners))
+                        .padding(8.dp)
+                        .clickable { onSpaceSelected(item) }
                 ) {
                     AsyncImage(
                         model = item.agent.avatarUrl,
                         contentDescription = null,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(RoundedCornerShape(roundedCorners))
                     )
                     Column(
                         modifier = Modifier

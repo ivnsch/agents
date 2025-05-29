@@ -262,7 +262,9 @@ fun AvatarImageBox(avatarUrl: String, regenerateAvatar: () -> Unit) = Box(
         AsyncImage(
             model = avatarUrl,
             contentDescription = null,
-            modifier = Modifier.size(64.dp)
+            modifier = Modifier
+                .size(64.dp)
+                .clip(RoundedCornerShape(12.dp))
         )
         // this box allows to offset the bottom outside of the image
         Box(
