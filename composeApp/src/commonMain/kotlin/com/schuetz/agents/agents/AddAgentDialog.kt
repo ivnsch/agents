@@ -31,7 +31,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import coil3.compose.AsyncImage
@@ -78,13 +83,21 @@ fun AddAgentDialog(
                     llm = it
                 })
                 if (hasApiKey(llm)) {
-                    Text(text = "API key:")
+                    Row {
+                        Text(text = "Access token")
+                        Link(
+                            "https://huggingface.co/docs/hub/en/security-tokens",
+                            " (how to get one)"
+                        )
+                        Text(text = ":")
+                    }
                     TextField(
                         value = authToken,
                         onValueChange = { authToken = it },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
+
                 }
                 if (hasModel(llm)) {
                     Text(text = "Model:")
@@ -116,6 +129,20 @@ fun AddAgentDialog(
         }
     }
 }
+
+@Composable
+fun Link(url: String, text: String) = Text(
+    buildAnnotatedString {
+        withLink(
+            LinkAnnotation.Url(
+                url,
+                TextLinkStyles(style = SpanStyle(color = Color.Blue))
+            )
+        ) {
+            append(text)
+        }
+    }
+)
 
 @Composable
 fun LLMSelectionDropdown(
