@@ -1,5 +1,6 @@
-package com.schuetz.agents.domain
+package com.schuetz.agents.llm
 
+import com.schuetz.agents.domain.LLM
 import kotlinx.coroutines.delay
 
 class DummyLLM : LLM {

@@ -1,4 +1,6 @@
-package com.schuetz.agents.domain
+package com.schuetz.agents.llm
+
+import com.schuetz.agents.domain.LLM
 
 class ErrorLLM : LLM {
     override suspend fun prompt(message: String): Result<String> =

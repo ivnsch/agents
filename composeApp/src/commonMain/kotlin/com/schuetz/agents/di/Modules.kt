@@ -23,8 +23,8 @@ import com.schuetz.agents.dicebear.DiceBearClientImpl
 import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.http.HttpClientFactory
-import com.schuetz.agents.huggingface.HuggingFaceClient
-import com.schuetz.agents.huggingface.HuggingFaceClientImpl
+import com.schuetz.agents.client.HuggingFaceClient
+import com.schuetz.agents.client.HuggingFaceClientImpl
 import com.schuetz.agents.prefs.Prefs
 import com.schuetz.agents.spaces.SpacesRepo
 import com.schuetz.agents.spaces.SpacesRepoImpl

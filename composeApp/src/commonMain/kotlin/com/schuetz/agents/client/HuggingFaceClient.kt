@@ -1,4 +1,4 @@
-package com.schuetz.agents.huggingface
+package com.schuetz.agents.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

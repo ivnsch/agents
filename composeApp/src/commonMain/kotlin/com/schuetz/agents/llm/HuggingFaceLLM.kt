@@ -1,6 +1,7 @@
-package com.schuetz.agents.domain
+package com.schuetz.agents.llm
 
-import com.schuetz.agents.huggingface.HuggingFaceClient
+import com.schuetz.agents.client.HuggingFaceClient
+import com.schuetz.agents.domain.LLM
 
 class HuggingFaceLLM(
     private val client: HuggingFaceClient,

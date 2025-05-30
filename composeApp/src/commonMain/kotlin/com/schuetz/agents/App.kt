@@ -29,11 +29,11 @@ import com.schuetz.agents.chat.Chat
 import com.schuetz.agents.chat.ChatRepo
 import com.schuetz.agents.chat.ChatViewModel
 import com.schuetz.agents.domain.AgentConnectionData
-import com.schuetz.agents.domain.DummyLLM
-import com.schuetz.agents.domain.ErrorLLM
-import com.schuetz.agents.domain.HuggingFaceLLM
+import com.schuetz.agents.llm.DummyLLM
+import com.schuetz.agents.llm.ErrorLLM
+import com.schuetz.agents.llm.HuggingFaceLLM
 import com.schuetz.agents.domain.SpaceData
-import com.schuetz.agents.huggingface.HuggingFaceClient
+import com.schuetz.agents.client.HuggingFaceClient
 import com.schuetz.agents.spaces.Spaces
 import com.schuetz.agents.spaces.SpacesViewModel
 import kotlinx.coroutines.Dispatchers

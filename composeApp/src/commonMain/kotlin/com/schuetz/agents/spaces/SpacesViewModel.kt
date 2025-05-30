@@ -8,7 +8,7 @@ import com.schuetz.agents.domain.AgentInput
 import com.schuetz.agents.domain.ConnectableProvider
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.domain.SpaceInput
-import com.schuetz.agents.huggingface.huggingFaceModelNames
+import com.schuetz.agents.client.huggingFaceModelNames
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
