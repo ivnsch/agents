@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +52,7 @@ import com.schuetz.agents.spaces.AddAgentInputs
 @Composable
 fun AddAgentDialog(
     avatarUrl: String,
-    llmModels: List<String>,
+    llmModels: (ConnectableProvider) -> List<String>,
     onAddAgent: (AddAgentInputs) -> Unit,
     onDismiss: () -> Unit,
     regenerateAvatar: () -> Unit
@@ -59,8 +60,12 @@ fun AddAgentDialog(
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf<String?>(null) }
     var authToken by remember { mutableStateOf<String?>(null) }
-    var model by remember { mutableStateOf(llmModels.firstOrNull() ?: "") }
     var llm by remember { mutableStateOf(ConnectableProvider.HUGGING_FACE) }
+    var model by remember { mutableStateOf("") }
+
+    LaunchedEffect(llm) {
+        model = llmModels(llm).firstOrNull() ?: ""
+    }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
@@ -108,10 +113,9 @@ fun AddAgentDialog(
                 if (hasApiKey(llm)) {
                     Row {
                         Text(text = "Access token")
-                        Link(
-                            "https://huggingface.co/docs/hub/en/security-tokens",
-                            " (how to get one)"
-                        )
+                        apiKeyLink(llm)?.let {
+                            Link(it, " (how to get one)")
+                        }
                         Text(text = ":")
                     }
                     TextField(
@@ -120,12 +124,11 @@ fun AddAgentDialog(
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
-
                 }
                 if (hasModel(llm)) {
                     Text(text = "Model:")
                     LLMModelSelectionDropdown(
-                        models = llmModels,
+                        models = llmModels(llm),
                         selectedModel = model,
                         onModelChange = {
                             model = it
@@ -210,17 +213,26 @@ private fun LLMDropdownItem(llm: ConnectableProvider, onClick: (ConnectableProvi
 
 private fun hasApiKey(llm: ConnectableProvider): Boolean = when (llm) {
     ConnectableProvider.HUGGING_FACE -> true
+    ConnectableProvider.OPEN_AI -> true
     ConnectableProvider.DUMMY -> false
 }
 
 private fun hasModel(llm: ConnectableProvider): Boolean = when (llm) {
     ConnectableProvider.HUGGING_FACE -> true
+    ConnectableProvider.OPEN_AI -> true
     ConnectableProvider.DUMMY -> false
 }
 
 private fun toTextLabel(llm: ConnectableProvider): String = when (llm) {
     ConnectableProvider.HUGGING_FACE -> "Hugging Face"
+    ConnectableProvider.OPEN_AI -> "OpenAI"
     ConnectableProvider.DUMMY -> "Dummy"
+}
+
+private fun apiKeyLink(llm: ConnectableProvider): String? = when (llm) {
+    ConnectableProvider.HUGGING_FACE -> "https://huggingface.co/docs/hub/en/security-tokens"
+    ConnectableProvider.OPEN_AI -> "https://help.openai.com/en/articles/4936850-where-do-i-find-my-openai-api-key"
+    ConnectableProvider.DUMMY -> null
 }
 
 @Composable

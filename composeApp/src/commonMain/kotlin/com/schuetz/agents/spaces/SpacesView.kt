@@ -93,7 +93,7 @@ fun Spaces(viewModel: SpacesViewModel, onSpaceSelected: (SpaceData) -> Unit) {
     if (showAddAgentDialog.value) {
         AddAgentDialog(
             avatarUrl = avatarUrl,
-            llmModels = viewModel.llmModels(),
+            llmModels = { viewModel.llmModels(it) },
             onAddAgent = {
                 viewModel.addSpaceWithAgent(it)
                 showAddAgentDialog.value = false

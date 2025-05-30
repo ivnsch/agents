@@ -6,9 +6,9 @@ import com.schuetz.agents.AvatarUrlGenerator
 import com.schuetz.agents.domain.AgentConnectionData.None.toConnectionData
 import com.schuetz.agents.domain.AgentInput
 import com.schuetz.agents.domain.ConnectableProvider
+import com.schuetz.agents.domain.LLMModelProvider
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.domain.SpaceInput
-import com.schuetz.agents.client.huggingFaceModelNames
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 class SpacesViewModel(
     private val spacesRepo: SpacesRepo,
     private val avatarUrlGenerator: AvatarUrlGenerator,
+    private val llmModelProvider: (ConnectableProvider) -> LLMModelProvider
 ) : ViewModel() {
     val spaces: Flow<List<SpaceData>> = spacesRepo.spaces
         .catch { _errorMessage.value = it.toString() }
@@ -64,9 +65,8 @@ class SpacesViewModel(
         _newAgentavatarUrl.value = avatarUrlGenerator.generateRandomAvatarUrl()
     }
 
-    fun llmModels(): List<String> =
-        // TODO generalize
-        huggingFaceModelNames
+    fun llmModels(provider: ConnectableProvider): List<String> =
+        llmModelProvider(provider).models
 
     fun clearError() {
         _errorMessage.value = null
