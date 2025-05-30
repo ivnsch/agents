@@ -22,9 +22,6 @@ class HuggingFaceClientImpl(
         model: String,
         accessToken: String
     ): Result<String> {
-        println("!!!! token: $accessToken")
-
-
         val response = client.post("https://router.huggingface.co/cerebras/v1/chat/completions") {
             headers {
                 append(HttpHeaders.Authorization, "Bearer $accessToken")
