@@ -3,6 +3,8 @@ package com.schuetz.agents.db.mem
 import com.schuetz.agents.db.MessagesDao
 import com.schuetz.agents.domain.Message
 import com.schuetz.agents.domain.MessageInput
+import com.schuetz.agents.domain.StructuredMessage
+import com.schuetz.agents.domain.StructuredMessageInput
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
@@ -17,10 +19,20 @@ class MemMessagesDao : MessagesDao {
         }
 
     override suspend fun insert(message: MessageInput) {
+        insert(
+            StructuredMessageInput(
+                StructuredMessage.Message(message.text),
+                message.author,
+                message.space
+            )
+        )
+    }
+
+    override suspend fun insert(message: StructuredMessageInput) {
         val newMessage =
             Message(
                 id = messages.value.size.toLong(),
-                text = message.text,
+                content = message.content,
                 author = message.author,
                 space = message.space
             )

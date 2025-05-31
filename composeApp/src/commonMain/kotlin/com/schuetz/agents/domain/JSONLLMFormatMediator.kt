@@ -1,20 +1,28 @@
 package com.schuetz.agents.domain
 
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonClassDiscriminator
+import kotlin.Result.Companion.success
 
 interface LLMFormatMediator {
     fun modifyPrompt(prompt: String): String
-    fun processResponse(response: String): Result<String>
+    fun processResponse(response: String): Result<LLMResponse>
 }
 
 class JSONLLMFormatMediator : LLMFormatMediator {
     override fun modifyPrompt(prompt: String): String =
         addJsonRequest(prompt)
 
-    override fun processResponse(response: String): Result<String> =
-        toMessageResponse(response).map {
-            it.text
+    override fun processResponse(response: String): Result<LLMResponse> {
+        val json = Json { classDiscriminator = "type" }
+        return runCatching {
+            val decoded = json.decodeFromString<LLMResponse>(response)
+            return success(decoded)
         }
+    }
 
     private fun addJsonRequest(prompt: String): String =
         """
@@ -22,10 +30,17 @@ class JSONLLMFormatMediator : LLMFormatMediator {
             $prompt
         """.trimIndent()
 
-    private fun toMessageResponse(response: String): Result<MessageResponse> {
-        val json = Json { ignoreUnknownKeys = true }
-        return runCatching {
-            json.decodeFromString<MessageResponse>(response)
-        }
-    }
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+@Serializable
+@JsonClassDiscriminator("type")
+sealed class LLMResponse {
+    @Serializable
+    @SerialName("message")
+    data class MessageResponse(val text: String) : LLMResponse()
+
+    @Serializable
+    @SerialName("weather")
+    data object WeatherRequest : LLMResponse()
 }

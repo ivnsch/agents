@@ -1,9 +1,11 @@
 package com.schuetz.agents.di
 
 import com.schuetz.agents.AvatarUrlGenerator
+import com.schuetz.agents.DummyWeatherClient
 import com.schuetz.agents.InitAppService
 import com.schuetz.agents.InitAppServiceImpl
 import com.schuetz.agents.PrefsFactory
+import com.schuetz.agents.WeatherClient
 import com.schuetz.agents.agents.AgentsRepo
 import com.schuetz.agents.agents.AgentsRepoImpl
 import com.schuetz.agents.chat.ChatRepo
@@ -29,6 +31,8 @@ import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.LLMAgentImpl
 import com.schuetz.agents.domain.LLMFormatMediator
+import com.schuetz.agents.domain.LLMTextMessageCapability
+import com.schuetz.agents.domain.LLMWeatherReportCapability
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.http.HttpClientFactory
 import com.schuetz.agents.llm.DummyLLM
@@ -61,7 +65,19 @@ val sharedModule = module {
     }
 
     single<LLMFormatMediator> { JSONLLMFormatMediator() }
-    factory<LLMAgent> { LLMAgentImpl(get()) }
+
+    single { LLMWeatherReportCapability(get()) }
+    single { LLMTextMessageCapability() }
+
+    single<WeatherClient> { DummyWeatherClient() }
+
+    factory<LLMAgent> {
+        LLMAgentImpl(
+            get(),
+            get<LLMTextMessageCapability>(),
+            listOf(get<LLMWeatherReportCapability>())
+        )
+    }
 
     single<AgentsRepo> { AgentsRepoImpl(get(), get()) }
     single<SpacesRepo> { SpacesRepoImpl(get(), get()) }

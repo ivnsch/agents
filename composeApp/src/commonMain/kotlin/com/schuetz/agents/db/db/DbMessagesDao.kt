@@ -8,10 +8,13 @@ import com.schuetz.agents.domain.AgentData
 import com.schuetz.agents.domain.Message
 import com.schuetz.agents.domain.MessageInput
 import com.schuetz.agents.domain.SpaceData
+import com.schuetz.agents.domain.StructuredMessage
+import com.schuetz.agents.domain.StructuredMessageInput
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.serialization.json.Json
 
 class DbMessagesDao(
     private val database: MyDatabase,
@@ -39,9 +42,10 @@ class DbMessagesDao(
                         avatarUrl = it.author_avatar_url,
                         connectionData = connectionData
                     )
+                    val strucutedContent = fromDbStr(it.text)
                     Message(
                         it.id,
-                        it.text,
+                        content = strucutedContent,
                         agent,
                         space = SpaceData(it.space_id, it.space_name, agent)
                     )
@@ -52,4 +56,15 @@ class DbMessagesDao(
     override suspend fun insert(message: MessageInput) {
         database.messageQueries.insert(message.text, message.author.id, message.space.id)
     }
+
+    override suspend fun insert(message: StructuredMessageInput) {
+        val jsonString = toDbStr(message.content)
+        database.messageQueries.insert(jsonString, message.author.id, message.space.id)
+    }
+
+    private fun toDbStr(response: StructuredMessage): String =
+        Json.encodeToString(response)
+
+    private fun fromDbStr(jsonString: String): StructuredMessage =
+        Json.decodeFromString<StructuredMessage>(jsonString)
 }

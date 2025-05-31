@@ -1,7 +1,9 @@
 package com.schuetz.agents.llm
 
 import com.schuetz.agents.domain.LLM
+import com.schuetz.agents.domain.LLMResponse
 import kotlinx.coroutines.delay
+import kotlinx.serialization.json.Json
 
 class DummyLLM : LLM {
     override suspend fun prompt(message: String): Result<String> {
@@ -17,3 +19,5 @@ private val randomReplies = listOf(
     "Why do you say that?",
     "Hmm..."
 )
+    .map { LLMResponse.MessageResponse(it) }
+    .map { Json.encodeToString(LLMResponse.serializer(), it) }
