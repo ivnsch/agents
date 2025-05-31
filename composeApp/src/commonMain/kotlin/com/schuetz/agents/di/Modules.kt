@@ -25,6 +25,8 @@ import com.schuetz.agents.dicebear.DiceBearClientImpl
 import com.schuetz.agents.domain.AgentConnectionData
 import com.schuetz.agents.domain.ConnectableProvider
 import com.schuetz.agents.domain.LLM
+import com.schuetz.agents.domain.LLMAgent
+import com.schuetz.agents.domain.LLMAgentImpl
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.http.HttpClientFactory
 import com.schuetz.agents.llm.DummyLLM
@@ -52,7 +54,11 @@ val sharedModule = module {
     // https://github.com/Kotlin/kotlinx.coroutines/issues/3205#issuecomment-2906627080
     single<CoroutineDispatcher> { Dispatchers.Default }
 
-    factory<ChatRepo> { (llm: LLM) -> ChatRepoImpl(get(), llm, get()) }
+    factory<ChatRepo> { (llm: LLM) ->
+        ChatRepoImpl(get(), llm, get(), get())
+    }
+
+    factory<LLMAgent> { LLMAgentImpl() }
 
     single<AgentsRepo> { AgentsRepoImpl(get(), get()) }
     single<SpacesRepo> { SpacesRepoImpl(get(), get()) }
