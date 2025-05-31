@@ -24,9 +24,11 @@ import com.schuetz.agents.db.db.MyDatabaseImpl
 import com.schuetz.agents.dicebear.DiceBearClientImpl
 import com.schuetz.agents.domain.AgentConnectionData
 import com.schuetz.agents.domain.ConnectableProvider
+import com.schuetz.agents.domain.JSONLLMFormatMediator
 import com.schuetz.agents.domain.LLM
 import com.schuetz.agents.domain.LLMAgent
 import com.schuetz.agents.domain.LLMAgentImpl
+import com.schuetz.agents.domain.LLMFormatMediator
 import com.schuetz.agents.domain.SpaceData
 import com.schuetz.agents.http.HttpClientFactory
 import com.schuetz.agents.llm.DummyLLM
@@ -58,7 +60,8 @@ val sharedModule = module {
         ChatRepoImpl(get(), llm, get(), get())
     }
 
-    factory<LLMAgent> { LLMAgentImpl() }
+    single<LLMFormatMediator> { JSONLLMFormatMediator() }
+    factory<LLMAgent> { LLMAgentImpl(get()) }
 
     single<AgentsRepo> { AgentsRepoImpl(get(), get()) }
     single<SpacesRepo> { SpacesRepoImpl(get(), get()) }
