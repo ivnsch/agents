@@ -21,27 +21,26 @@ class HuggingFaceClientImpl(
         prompt: String,
         model: String,
         accessToken: String
-    ): Result<String> {
-        val response = client.post("https://router.huggingface.co/cerebras/v1/chat/completions") {
-            headers {
-                append(HttpHeaders.Authorization, "Bearer $accessToken")
-                contentType(ContentType.Application.Json)
-                setBody(
-                    CompletionsRequest(
-                        messages = listOf(
-                            Message(role = "user", content = prompt)
-                        ),
-                        model = model
+    ): Result<String> = runCatching {
+        val response =
+            client.post("https://router.huggingface.co/cerebras/v1/chat/completions") {
+                headers {
+                    append(HttpHeaders.Authorization, "Bearer $accessToken")
+                    contentType(ContentType.Application.Json)
+                    setBody(
+                        CompletionsRequest(
+                            messages = listOf(
+                                Message(role = "user", content = prompt)
+                            ),
+                            model = model
+                        )
                     )
-                )
+                }
             }
-        }
 
-        return runCatching {
-            val choices = response.body<CompletionsResponse>().choices
-            choices.firstOrNull()?.message?.content
-                ?: throw Exception("No choices found in completion response")
-        }
+        val choices = response.body<CompletionsResponse>().choices
+        choices.firstOrNull()?.message?.content
+            ?: throw Exception("No choices found in completion response")
     }
 }
 
